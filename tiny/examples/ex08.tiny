@@ -1,0 +1,3 @@
+/* Example of potential unsoundness by overflow
+ * in domain implemented in OCaml. */
+x = 1000000000 + 1000000000;

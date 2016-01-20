@@ -1,0 +1,1 @@
+TMPC=$(tempfile); TMPE=$(tempfile); ./tiny -q -c ../examples/ex1.tiny -o ${TMPC}.c && gcc -Wall ${TMPC}.c -o ${TMPE} && ${TMPE} && rm -f ${TMPC}.c ${TMPE} || rm -f ${TMPC}.c ${TMPE}
