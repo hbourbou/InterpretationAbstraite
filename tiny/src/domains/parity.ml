@@ -38,8 +38,12 @@ let join x y = match x, y with
   | _ -> if x=y then x else Top
 
 
-let meet x y = 
-...
+let meet x y = match x, y with
+  | _, Top -> x
+  | Top, _ -> y
+  | _, Bot -> Bot
+  | Bot, _ -> Bot
+  | _ -> if x=y then x else Bot
 
 
 let widening = join  (* Ok, maybe you'll need to implement this one if your
@@ -60,10 +64,19 @@ let sem_plus x y =
   | _, Top -> Top
   | _ -> if x= y then Even else Odd
 
-let sem_minus x y = top
-let sem_times x y = top
-let sem_div x y = top
-
+let sem_minus x y = sem_plus x y
+let sem_times x y = 
+	match x,y with
+	  | Bot, _  -> Bot
+	  | _, Bot  -> Bot
+	  | Even, _ -> Even
+	  | _, Even -> Even
+	  | Odd, Odd -> Odd
+	  | _ -> Top
+let sem_div x y = match x,y with
+	  | Bot, _  -> Bot
+	  | _, Bot  -> Bot
+	  | _ -> Top
 let sem_guard x = x
 
 let backsem_plus x y r = x, y
