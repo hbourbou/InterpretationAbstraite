@@ -1,0 +1,50 @@
+rm -r tmp
+mkdir tmp
+./bin/tiny-kildall_corrected -q examples/ex01.tiny > tmp/outEx01V1
+./src/tiny    -q    examples/ex01.tiny > tmp/outEx01V2
+diff tmp/outEx01V1 tmp/outEx01V2
+
+./bin/tiny-kildall_corrected -q examples/ex02.tiny > tmp/outEx02V1
+./src/tiny        -q examples/ex02.tiny > tmp/outEx02V2
+diff tmp/outEx02V1 tmp/outEx02V2
+
+
+./bin/tiny-kildall_corrected -q examples/ex03.tiny > tmp/outEx03V1
+./src/tiny        -q examples/ex03.tiny > tmp/outEx03V2
+diff tmp/outEx03V1 tmp/outEx03V2
+
+./bin/tiny-kildall_corrected -q examples/ex04.tiny > tmp/outEx04V1
+./src/tiny        -q examples/ex04.tiny > tmp/outEx04V2
+diff tmp/outEx04V1 tmp/outEx04V2
+
+
+./bin/tiny-kildall_corrected -q examples/ex05.tiny > tmp/outEx05V1
+./src/tiny        -q examples/ex05.tiny > tmp/outEx05V2
+diff tmp/outEx05V1 tmp/outEx05V2
+
+
+./bin/tiny-kildall_corrected -q examples/ex06.tiny > tmp/outEx06V1
+./src/tiny        -q examples/ex06.tiny > tmp/outEx06V2
+diff tmp/outEx06V1 tmp/outEx06V2
+
+
+./bin/tiny-kildall_corrected -q examples/ex07.tiny > tmp/outEx07V1
+./src/tiny        -q examples/ex07.tiny > tmp/outEx07V2
+diff tmp/outEx07V1 tmp/outEx07V2
+
+
+./bin/tiny-kildall_corrected -q examples/ex08.tiny > tmp/outEx08V1
+./src/tiny        -q examples/ex08.tiny > tmp/outEx08V2
+diff tmp/outEx08V1 tmp/outEx08V2
+
+./bin/tiny-kildall_corrected -q examples/ex09.tiny > tmp/outEx09V1
+./src/tiny        -q examples/ex09.tiny > tmp/outEx09V2
+diff tmp/outEx09V1 tmp/outEx09V2
+
+./bin/tiny-kildall_corrected -q examples/ex10.tiny > tmp/outEx10V1
+./src/tiny        -q examples/ex10.tiny > tmp/outEx10V2
+diff tmp/outEx10V1 tmp/outEx10V2
+
+./bin/tiny-kildall_corrected -q examples/ex11.tiny > tmp/outEx11V1
+./src/tiny        -q examples/ex11.tiny > tmp/outEx11V2
+diff tmp/outEx11V1 tmp/outEx11V2
