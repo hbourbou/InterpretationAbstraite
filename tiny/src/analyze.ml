@@ -22,8 +22,10 @@
 (*module Dom : Relational.Domain = NonRelational.MakeRelational (Dummy)*)
 (*module Dom : Relational.Domain = NonRelational.MakeRelational (Parity)*)
 (* module Dom : Relational.Domain = NonRelational.MakeRelational (Kildall) *)
-module MonDomaineNR = NonRelationalProduct.Make (Signes) (Parity)
-module Dom : Relational.Domain = NonRelational.MakeRelational (MonDomaineNR) 
+module MonDomaineNR = NonRelationalProduct.Make  (Signes) (Parity)
+module  R = MonDomaineNR.R
+module MonDomaineNR2 = NonRelationalReduction.Make (MonDomaineNR) (R)
+module Dom : Relational.Domain = NonRelational.MakeRelational (MonDomaineNR2) 
 (* module Dom : Relational.Domain = NonRelational.MakeRelational (Intervals) *)
 (* To be able to use this last two domains, you have to install the Apron
  * library and change the flag "actually_use_apron" in myocamlbuild.ml. *)

@@ -20,7 +20,7 @@
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet, traverse }
 /usr/bin/ocamlc -c -I domains -o main.cmo main.ml # cached
 # Target: analyze.ml.depends, tags: { extension:ml, file:analyze.ml, ocaml, ocamldep, quiet, traverse }
-/usr/bin/ocamldep -modules analyze.ml > analyze.ml.depends # cached
+/usr/bin/ocamldep -modules analyze.ml > analyze.ml.depends
 # Target: ast.ml.depends, tags: { extension:ml, file:ast.ml, ocaml, ocamldep, quiet, traverse }
 /usr/bin/ocamldep -modules ast.ml > ast.ml.depends # cached
 # Target: ast.mli.depends, tags: { extension:mli, file:ast.mli, ocaml, ocamldep, quiet, traverse }
@@ -67,6 +67,12 @@
 /usr/bin/ocamlc -c -I domains -o domains/nonRelationalProduct.cmi domains/nonRelationalProduct.mli # cached
 # Target: domains/nonRelationalProduct.cmx, tags: { compile, extension:cmx, extension:ml, file:domains/nonRelationalProduct.cmx, file:domains/nonRelationalProduct.ml, implem, native, ocaml, quiet, traverse }
 /usr/bin/ocamlopt -c -I domains -o domains/nonRelationalProduct.cmx domains/nonRelationalProduct.ml # cached
+# Target: domains/nonRelationalReduction.ml.depends, tags: { extension:ml, file:domains/nonRelationalReduction.ml, ocaml, ocamldep, quiet, traverse }
+/usr/bin/ocamldep -modules domains/nonRelationalReduction.ml > domains/nonRelationalReduction.ml.depends
+# Target: domains/nonRelationalReduction.mli.depends, tags: { extension:mli, file:domains/nonRelationalReduction.mli, ocaml, ocamldep, quiet, traverse }
+/usr/bin/ocamldep -modules domains/nonRelationalReduction.mli > domains/nonRelationalReduction.mli.depends # cached
+# Target: domains/nonRelationalReduction.cmi, tags: { byte, compile, extension:mli, file:domains/nonRelationalReduction.mli, interf, ocaml, quiet, traverse }
+/usr/bin/ocamlc -c -I domains -o domains/nonRelationalReduction.cmi domains/nonRelationalReduction.mli # cached
 # Target: domains/parity.ml.depends, tags: { extension:ml, file:domains/parity.ml, ocaml, ocamldep, quiet, traverse }
 /usr/bin/ocamldep -modules domains/parity.ml > domains/parity.ml.depends # cached
 # Target: domains/parity.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:domains/parity.cmo, file:domains/parity.ml, implem, ocaml, quiet, traverse }
@@ -121,14 +127,10 @@
 /usr/bin/ocamlc -c -I domains -o domains/signes.cmo domains/signes.ml # cached
 # Target: domains/signes.cmx, tags: { compile, extension:cmx, extension:ml, file:domains/signes.cmx, file:domains/signes.ml, implem, native, ocaml, quiet, traverse }
 /usr/bin/ocamlopt -c -I domains -o domains/signes.cmx domains/signes.ml # cached
-# Target: analyze.cmx, tags: { compile, extension:cmx, extension:ml, file:analyze.cmx, file:analyze.ml, implem, native, ocaml, quiet, traverse }
-/usr/bin/ocamlopt -c -I domains -o analyze.cmx analyze.ml # cached
-# Target: compile.ml.depends, tags: { extension:ml, file:compile.ml, ocaml, ocamldep, quiet, traverse }
-/usr/bin/ocamldep -modules compile.ml > compile.ml.depends # cached
-# Target: compile.cmx, tags: { compile, extension:cmx, extension:ml, file:compile.cmx, file:compile.ml, implem, native, ocaml, quiet, traverse }
-/usr/bin/ocamlopt -c -I domains -o compile.cmx compile.ml # cached
-# Target: main.cmx, tags: { compile, extension:cmx, extension:ml, file:main.cmx, file:main.ml, implem, native, ocaml, quiet, traverse }
-/usr/bin/ocamlopt -c -I domains -o main.cmx main.ml # cached
-# Target: main.native, tags: { dont_link_with, extension:native, file:main.native, link, native, ocaml, program, quiet, traverse, use_apron, use_box, use_gmp, use_oct, use_polka }
-/usr/bin/ocamlopt location.cmx name.cmx ast.cmx relational.cmx report.cmx nonRelational.cmx domains/nonRelationalProduct.cmx domains/parity.cmx domains/signes.cmx parser.cmx lexer.cmx utils.cmx parse.cmx printResults.cmx analyze.cmx compile.cmx main.cmx -o main.native # cached
-# Compilation successful.
+# Target: domains/nonRelationalReduction.cmx, tags: { compile, extension:cmx, extension:ml, file:domains/nonRelationalReduction.cmx, file:domains/nonRelationalReduction.ml, implem, native, ocaml, quiet, traverse }
+/usr/bin/ocamlopt -c -I domains -o domains/nonRelationalReduction.cmx domains/nonRelationalReduction.ml
++ /usr/bin/ocamlopt -c -I domains -o domains/nonRelationalReduction.cmx domains/nonRelationalReduction.ml
+File "domains/nonRelationalReduction.ml", line 8, characters 2-5:
+Error: Unbound constructor Bot
+Command exited with code 2.
+# Compilation unsuccessful.
