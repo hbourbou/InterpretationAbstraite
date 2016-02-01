@@ -13,10 +13,10 @@ type t = Bot | Top | Bounded of int*int | NplusOO of int | NminusOO of int
 (* a printing function (useful for debuging), *)
 let fprint ff = function
   | Bot 			-> Format.fprintf ff "bot"
-  | Top 			-> Format.fprintf ff "top"
-  | Bounded (n1,n2) -> Format.fprintf ff "[%i,%i]" n1 n2 
-  | NplusOO  n 		-> Format.fprintf ff "[%i,+oo[" n
-  | NminusOO n	    -> Format.fprintf ff "]-oo,%i]" n 
+  | Top 			-> Format.fprintf ff "(-oo, +oo)"
+  | Bounded (n1,n2) -> Format.fprintf ff "[%d, %d]" n1 n2 
+  | NplusOO  n 		-> Format.fprintf ff "[%d, +oo)" n
+  | NminusOO n	    -> Format.fprintf ff "(-oo, %d]" n 
 
 (* the order of the lattice. *)
 let order x y = 
@@ -39,30 +39,53 @@ let bottom = Bot
  * the precision of your analyses. *)
 
 let join x y = match x, y with
-  | _, Top -> Top
-  | Top, _ -> Top
-  | _, Bot -> x
-  | Bot, _ -> y
-  | _ -> if x=y then x else Top
+  | _, Top 							-> Top
+  | Top, _ 							-> Top
+  
+  | _, Bot 							-> x
+  | Bot, _ 							-> y
+  
+  |Bounded (n1,n2), Bounded (m1,m2) -> Bounded (min n1 m1, max n2 m2)
+  
+  |Bounded (n1,n2), NplusOO m 		-> NplusOO (min n1 m)
+  |NplusOO m, Bounded (n1,n2) 		-> NplusOO (min n1 m)
+  
+  |Bounded (n1,n2), NminusOO m 		-> NminusOO (max n2 m)
+  |NminusOO m, Bounded (n1,n2) 		-> NminusOO (max n2 m)
+  
+  |NplusOO m, NplusOO n 			-> NplusOO (min n m)
+  
+  |NminusOO n, NminusOO m 			-> NminusOO (max n m)
+  | _ -> Top
 
 
 let meet x y = match x, y with
-  | _, Top -> x
-  | Top, _ -> y
-  | _, Bot -> Bot
-  | Bot, _ -> Bot
-  | _ -> if x=y then x else Bot
+  | _, Top 							-> x
+  | Top, _ 							-> y
+  
+  | _, Bot 							-> Bot
+  | Bot, _ 							-> Bot
+  
+  |Bounded (n1,n2), Bounded (m1,m2) -> if (n2 < m1) || (n1 > m2) then Bot
+										else Bounded (max n1 m1, min n2 m2)
+  
+  |Bounded (n1,n2), NplusOO m 		-> if (n2 < m) then Bot else Bounded (max n1 m,n2)
+  |NplusOO m, Bounded (n1,n2) 		-> if (n2 < m) then Bot else Bounded (max n1 m,n2)
+  
+  |Bounded (n1,n2), NminusOO m 		-> if (n1 > m) then Bot else Bounded (n1, min m n2)
+  |NminusOO m, Bounded (n1,n2) 		-> if (n1 > m) then Bot else Bounded (n1, min m n2)
+  
+  |NplusOO m, NplusOO n 			-> NplusOO (max n m)
+  |NminusOO n, NminusOO m 			-> NminusOO (min n m)
+  |NplusOO n, NminusOO m 			-> if n > m then Bot else Bounded (n,m)
+  |NminusOO m, NplusOO n 			-> if n > m then Bot else Bounded (n,m)
 
 
 let widening = join  (* Ok, maybe you'll need to implement this one if your
                       * lattice has infinite ascending chains and you want
                       * your analyses to terminate. *)
 
-let sem_itv (n1:int) (n2:int) =
-  if n1 = n2 then
-    Cst n1
-  else
-    if n2 < n1 then Bot else Top
+let sem_itv (n1:int) (n2:int) = if n2 < n1 then Bot else Bounded (n1,n2)
 
 let sem_plus x y = 
   match x,y with
@@ -70,15 +93,29 @@ let sem_plus x y =
   | _, Bot -> Bot
   | Top, _ -> Top
   | _, Top -> Top
-  | Cst n1, Cst n2 -> Cst (n1+n2)
+  |Bounded (n1,n2), Bounded (m1,m2) ->  Bounded (n1 + m1, n2 + m2)
+  
+  |Bounded (n1,n2), NplusOO m 		-> NplusOO (n1 + m) 
+  |NplusOO m, Bounded (n1,n2) 		-> NplusOO (n1 + m) 
+  
+  |Bounded (n1,n2), NminusOO m 		-> NminusOO (n2 + m )	
+  |NminusOO m, Bounded (n1,n2) 		-> NminusOO (n2 + m )	
+  
+  |NplusOO m, NplusOO n 			-> NplusOO (n + m)
+  
+  |NminusOO n, NminusOO m 			-> NminusOO (n + m)
+  | _ -> Top
 
 let sem_minus x y =
-  match x,y with
-  | Bot, _ -> Bot
-  | _, Bot -> Bot
-  | Top, _ -> Top
-  | _, Top -> Top
-  | Cst n1, Cst n2 -> Cst (n1-n2)
+  let minus z = 
+		match z with
+		  | Bot 			-> Bot
+		  | Top 			-> Top
+		  | Bounded (n1,n2) -> Bounded (-n2, -n1)
+		  | NplusOO  n 		-> NminusOO (-n)
+		  | NminusOO n	    -> NplusOO (-n)
+  in
+    sem_plus x (minus y)
   
 let sem_times x y = 
   match x,y with
@@ -86,21 +123,55 @@ let sem_times x y =
   | _, Bot -> Bot
   | Top, _ -> Top
   | _, Top -> Top
-  | Cst n1, Cst n2 -> Cst (n1*n2)
+  |Bounded (n1,n2), Bounded (m1,m2) ->  let a = min (min (n1*m1) (n1*m2)) (min (n2*m1) (n2*m2)) in
+										let b = max (max (n1*m1) (n1*m2)) (max (n2*m1) (n2*m2)) in
+										Bounded (a, b)
+  
+  |NplusOO m, Bounded (n1,n2) 
+  |Bounded (n1,n2), NplusOO m 		-> if n1 < 0 then 
+												if n2 < 0 then 
+															NminusOO (max (n1*m) (n2*m)) 
+												else Top
+									   else if n1 = 0 then
+														if n2 = 0 then Bounded (0,0)
+														else
+														let a = min 0 (n2*m) in
+														NplusOO a
+											else 
+												let a = min (n1*m) (n2*m) in
+												NplusOO a
+
+  
+  |Bounded (n1,n2), NminusOO m 		
+  |NminusOO m, Bounded (n1,n2) 		-> if n1 > 0 then NminusOO (max (n1*m) (n2*m)) 
+									   else if n1 = 0 then
+														if n2 = 0 then Bounded (0,0)
+														else
+														let b = max 0 (n2*m) in
+														NminusOO b
+											else 
+												if n2 < 0 then 
+														let a = min (n1*m) (n2*m) in
+														NplusOO a	
+												else Top
+  
+  |NplusOO m, NplusOO n 			-> if (n < 0) || (m < 0) then Top else NplusOO (n * m)
+  
+  |NminusOO n, NminusOO m 			-> if (n > 0) || (m > 0) then Top else NplusOO (n * m)
+  | _ -> Top
 	  
 let sem_div x y =
- match x,y with
-  | Bot, _ -> Bot
-  | _, Bot -> Bot
-  | Top, _ -> Top
-  | _, Top -> Top
-  | Cst n1, Cst n2 -> if n2 = 0 then Bot else Cst (n1/n2)
+let reverse z = 
+		match z with
+		  | Bot 			-> Bot
+		  | Top 			-> Top
+		  | Bounded (n1,n2) -> if (n1 <>0 && n2 <>0 ) then Bounded (1/n2, 1/n1) else Bot
+		  | NplusOO  n 		-> if n > 0 then Bounded (0,1/n) else Bot
+		  | NminusOO n	    -> if n < 0 then Bounded (1/n,0) else Bot
+  in
+    sem_times x (reverse y)
 	  
-let sem_guard = 
-	function
-  | Bot -> Bot
-  | Top -> Top
-  | Cst v -> if v > 0 then Cst v else Bot
+let sem_guard = meet (NplusOO 1)
 
 let backsem_plus x y r = x, y
 let backsem_minus x y r = x, y

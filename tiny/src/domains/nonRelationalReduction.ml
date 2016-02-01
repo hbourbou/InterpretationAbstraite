@@ -2,14 +2,7 @@ module type Reduction = sig
   type t 
   val rho : t -> t
 end
-module  R = struct
-  type t 
-  let rho x  = match x with
-	|Bot, _ -> (Bot,Bot)
-	|_, Bot -> (Bot,Bot)
-	|(Null, Top) -> (Null, Even)
-	|(Null, Odd) -> (Bot,Bot)
-end
+
 
 module Make (D : NonRelational.Domain) (R : Reduction with type t = D.t) = struct
   type t = D.t
