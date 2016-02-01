@@ -81,10 +81,29 @@ let meet x y = match x, y with
   |NminusOO m, NplusOO n 			-> if n > m then Bot else Bounded (n,m)
 
 
-let widening = join  (* Ok, maybe you'll need to implement this one if your
-                      * lattice has infinite ascending chains and you want
-                      * your analyses to terminate. *)
+let widening x y=  match x, y with
+  | _, Top 							-> Top
+  | Top, _ 							-> Top
+  
+  | _, Bot 							-> x
+  | Bot, _ 							-> y
+  
+  |Bounded (a,b), Bounded (c,d) -> if (a <= c && d <= b) then x
+										else if (a <= c && d > b) then NplusOO a
+										else if (a > c && d <= b) then NminusOO b
+										else Top
 
+  
+  |Bounded (n1,n2), NplusOO m 		-> if (n1 <= m) then NplusOO n1 else Top
+  |NplusOO m, Bounded (n1,n2) 		-> if (n1 >= m) then NplusOO m  else Top
+  
+  |Bounded (n1,n2), NminusOO m 		-> if (n2 >= m) then NminusOO n2 else Top
+  |NminusOO m, Bounded (n1,n2) 		-> if (n2 <= m) then NminusOO m  else Top
+  
+  |NplusOO m, NplusOO n 			-> if (m<=n) then NplusOO m else Top
+  
+  |NminusOO n, NminusOO m 			-> if (n >= m) then NminusOO n else Top
+  | _ -> Top
 let sem_itv (n1:int) (n2:int) = if n2 < n1 then Bot else Bounded (n1,n2)
 
 let sem_plus x y = 

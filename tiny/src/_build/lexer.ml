@@ -592,7 +592,8 @@ let
       ( raise (Lexing_error "unknown char") )
 # 594 "lexer.ml"
 
-  | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; __ocaml_lex_token_rec lexbuf __ocaml_lex_state
+  | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; 
+      __ocaml_lex_token_rec lexbuf __ocaml_lex_state
 
 and comment lexbuf =
     __ocaml_lex_comment_rec lexbuf 42
@@ -601,19 +602,20 @@ and __ocaml_lex_comment_rec lexbuf __ocaml_lex_state =
       | 0 ->
 # 68 "lexer.mll"
        ( Lexing.new_line lexbuf; comment lexbuf )
-# 605 "lexer.ml"
+# 606 "lexer.ml"
 
   | 1 ->
 # 69 "lexer.mll"
          ( token lexbuf )
-# 610 "lexer.ml"
+# 611 "lexer.ml"
 
   | 2 ->
 # 70 "lexer.mll"
       ( comment lexbuf )
-# 615 "lexer.ml"
+# 616 "lexer.ml"
 
-  | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; __ocaml_lex_comment_rec lexbuf __ocaml_lex_state
+  | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; 
+      __ocaml_lex_comment_rec lexbuf __ocaml_lex_state
 
 ;;
 
