@@ -200,7 +200,7 @@ let rec sem_div x y =
 										if n1 > 0 then  let a = min (m/n1) (m/n2) in NplusOO a
 									    else let b = max (m/n1) (m/n2) in
 										NminusOO b	
-  |Bounded (n1,n2), NplusOO m 		->  if (m=0) then Bot
+  |Bounded (n1,n2), NplusOO m 		->  if (m=0) then (sem_div  x (NplusOO 1 ))
 										else
 											if (m <= (-1))  then (join (sem_div  x (Bounded(m,-1))) (sem_div  x (NplusOO 1 ))) 
 										else
@@ -208,7 +208,7 @@ let rec sem_div x y =
 										let b = max (max (n1/m) 0) (max (n2/m) 0) in
 										Bounded (a, b)
   
-  |Bounded (n1,n2), NminusOO m 		-> if (m=0) then Bot
+  |Bounded (n1,n2), NminusOO m 		-> if (m=0) then (sem_div  x (NminusOO (-1) ))
 										else
 											if (m >= 1)  then (join (sem_div  x (Bounded(1,m))) (sem_div  x (NminusOO (-1) ))) 
 										else
@@ -223,25 +223,25 @@ let rec sem_div x y =
 									    else let a = min (m/n1) (m/n2) in
 										NplusOO a
   
-  |NplusOO n, NplusOO m 			-> if (m=0) then Bot
+  |NplusOO n, NplusOO m 			-> if (m=0) then (sem_div  x (NplusOO 1 ))
 										else
 											if (m <= (-1))  then (join (sem_div  x (Bounded(m,-1))) (sem_div  x (NplusOO 1 ))) 
 										else
 										let a = (min (n/m) 0) in NplusOO a
 										
   
-  |NminusOO n, NminusOO m 			-> if (m=0) then Bot
+  |NminusOO n, NminusOO m 			-> if (m=0) then (sem_div  x (NminusOO (-1) ))
 										else
 											if (m >= 1)  then (join (sem_div  x (Bounded(1,m))) (sem_div  x (NminusOO (-1) ))) 
 										else
 										let a = (min (n/m) 0) in NplusOO a
 
-  | NminusOO n, NplusOO m  			-> if (m=0) then Bot
+  | NminusOO n, NplusOO m  			-> if (m=0) then (sem_div  x (NplusOO 1 ))
 										else
 											if (m <= (-1))  then (join (sem_div  x (Bounded(m,-1))) (sem_div  x (NplusOO 1 ))) 
 										else
 										let b = max (n/m) 0 in NminusOO b
-  |NplusOO n, NminusOO m 			-> if (m=0) then Bot
+  |NplusOO n, NminusOO m 			-> if (m=0) then (sem_div  x (NminusOO (-1) ))
 										else
 											if (m >= 1)  then (join (sem_div  x (Bounded(1,m))) (sem_div  x (NminusOO (-1) ))) 
 										else
