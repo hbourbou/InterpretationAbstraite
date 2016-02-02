@@ -179,20 +179,77 @@ let sem_times x y =
   |NminusOO n, NminusOO m 			-> if (n > 0) || (m > 0) then Top else NplusOO (n * m)
   | _ -> Top
 	  
-let sem_div x y =
-let reverse z = 
-		match z with
-		  | Bot 			-> Bot
-		  | Top 			-> Top
-		  | Bounded (n1,n2) -> if (n1 <>0 && n2 <>0 ) then Bounded (1/n2, 1/n1) else Bot
-		  | NplusOO  n 		-> if n > 0 then Bounded (0,1/n) else Bot
-		  | NminusOO n	    -> if n < 0 then Bounded (1/n,0) else Bot
-  in
-    sem_times x (reverse y)
-	  
+let rec sem_div x y =
+  match x,y with
+  | Bot, _ -> Bot
+  | _, Bot -> Bot
+  | Top, _ -> Top
+  | _, Top -> Top
+  |Bounded (n1,n2), Bounded (m1,m2) ->  if ((m1=0) && (m2=0)) then Bot
+										else
+											if ((m1 <= (-1)) && (m2 >= 1))  then (join (sem_div  x (Bounded(m1,-1))) (sem_div  x (Bounded(1,m2)))) 
+											else
+												let a = min (min (n1/m1) (n1/m2)) (min (n2/m1) (n2/m2)) in
+												let b = max (max (n1/m1) (n1/m2)) (max (n2/m1) (n2/m2)) in
+												Bounded (a, b)
+  
+  |NplusOO m, Bounded (n1,n2) 		-> if ((n1=0) && (n2=0)) then Bot
+										else
+											if ((n1 <= (-1)) && (n2 >= 1))  then (join (sem_div  x (Bounded(n1,-1))) (sem_div  x (Bounded(1,n2)))) 
+										else
+										if n1 > 0 then  let a = min (m/n1) (m/n2) in NplusOO a
+									    else let b = max (m/n1) (m/n2) in
+										NminusOO b	
+  |Bounded (n1,n2), NplusOO m 		->  if (m=0) then (sem_div  x (NplusOO 1 ))
+										else
+											if (m <= (-1))  then (join (sem_div  x (Bounded(m,-1))) (sem_div  x (NplusOO 1 ))) 
+										else
+										let a = min (min (n1/m) 0) (min (n2/m) 0) in
+										let b = max (max (n1/m) 0) (max (n2/m) 0) in
+										Bounded (a, b)
+  
+  |Bounded (n1,n2), NminusOO m 		-> if (m=0) then (sem_div  x (NminusOO (-1) ))
+										else
+											if (m >= 1)  then (join (sem_div  x (Bounded(1,m))) (sem_div  x (NminusOO (-1) ))) 
+										else
+										let a = min (min (n1/m) 0) (min (n2/m) 0) in
+										let b = max (max (n1/m) 0) (max (n2/m) 0) in
+										Bounded (a, b)
+  |NminusOO m, Bounded (n1,n2) 		-> if ((n1=0) && (n2=0)) then Bot
+										else
+											if ((n1 <= (-1)) && (n2 >= 1))  then (join (sem_div  x (Bounded(n1,-1))) (sem_div  x (Bounded(1,n2))))  
+										else
+										if n1 > 0 then  let b = max (m/n1) (m/n2) in NminusOO b
+									    else let a = min (m/n1) (m/n2) in
+										NplusOO a
+  
+  |NplusOO n, NplusOO m 			-> if (m=0) then (sem_div  x (NplusOO 1 ))
+										else
+											if (m <= (-1))  then (join (sem_div  x (Bounded(m,-1))) (sem_div  x (NplusOO 1 ))) 
+										else
+										let a = (min (n/m) 0) in NplusOO a
+										
+  
+  |NminusOO n, NminusOO m 			-> if (m=0) then (sem_div  x (NminusOO (-1) ))
+										else
+											if (m >= 1)  then (join (sem_div  x (Bounded(1,m))) (sem_div  x (NminusOO (-1) ))) 
+										else
+										let a = (min (n/m) 0) in NplusOO a
+
+  | NminusOO n, NplusOO m  			-> if (m=0) then (sem_div  x (NplusOO 1 ))
+										else
+											if (m <= (-1))  then (join (sem_div  x (Bounded(m,-1))) (sem_div  x (NplusOO 1 ))) 
+										else
+										let b = max (n/m) 0 in NminusOO b
+  |NplusOO n, NminusOO m 			-> if (m=0) then (sem_div  x (NminusOO (-1) ))
+										else
+											if (m >= 1)  then (join (sem_div  x (Bounded(1,m))) (sem_div  x (NminusOO (-1) ))) 
+										else
+										let b = max (n/m) 0 in NminusOO b
 let sem_guard = meet (NplusOO 1)
 
-let backsem_plus x y r = x, y
-let backsem_minus x y r = x, y
+let backsem_plus x y r = meet x (sem_minus r y), meet y (sem_minus r x)
+
+let backsem_minus x y r = meet x (sem_plus y r), meet y (sem_minus x r)
 let backsem_times x y r = x, y
 let backsem_div x y r = x, y
