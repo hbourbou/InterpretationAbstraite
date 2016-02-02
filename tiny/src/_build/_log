@@ -107,14 +107,14 @@
 /usr/bin/ocamlopt.opt -c -I domains -o printResults.cmx printResults.ml # cached
 # Target: domains/intervals.cmx, tags: { compile, extension:cmx, extension:ml, file:domains/intervals.cmx, file:domains/intervals.ml, implem, native, ocaml, quiet, traverse }
 /usr/bin/ocamlopt.opt -c -I domains -o domains/intervals.cmx domains/intervals.ml
+# Target: analyze.cmx, tags: { compile, extension:cmx, extension:ml, file:analyze.cmx, file:analyze.ml, implem, native, ocaml, quiet, traverse }
+/usr/bin/ocamlopt.opt -c -I domains -o analyze.cmx analyze.ml # cached
 # Target: compile.ml.depends, tags: { extension:ml, file:compile.ml, ocaml, ocamldep, quiet, traverse }
 /usr/bin/ocamldep.opt -modules compile.ml > compile.ml.depends # cached
 # Target: compile.cmx, tags: { compile, extension:cmx, extension:ml, file:compile.cmx, file:compile.ml, implem, native, ocaml, quiet, traverse }
 /usr/bin/ocamlopt.opt -c -I domains -o compile.cmx compile.ml # cached
-# Target: analyze.cmx, tags: { compile, extension:cmx, extension:ml, file:analyze.cmx, file:analyze.ml, implem, native, ocaml, quiet, traverse }
-/usr/bin/ocamlopt.opt -c -I domains -o analyze.cmx analyze.ml
 # Target: main.cmx, tags: { compile, extension:cmx, extension:ml, file:main.cmx, file:main.ml, implem, native, ocaml, quiet, traverse }
-/usr/bin/ocamlopt.opt -c -I domains -o main.cmx main.ml
+/usr/bin/ocamlopt.opt -c -I domains -o main.cmx main.ml # cached
 # Target: main.native, tags: { dont_link_with, extension:native, file:main.native, link, native, ocaml, program, quiet, traverse, use_apron, use_box, use_gmp, use_oct, use_polka }
 /usr/bin/ocamlopt.opt location.cmx name.cmx ast.cmx domains/intervals.cmx parser.cmx lexer.cmx relational.cmx report.cmx nonRelational.cmx utils.cmx parse.cmx printResults.cmx analyze.cmx compile.cmx main.cmx -o main.native
 # Compilation successful.
