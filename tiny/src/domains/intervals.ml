@@ -26,7 +26,9 @@ let order x y =
   |Bounded (n1,n2), Bounded (m1,m2) -> (n1 >= m1) && (n2 <= m2)
   |Bounded (n1,n2), NplusOO m 		-> n1 >= m
   |Bounded (n1,n2), NminusOO m 		-> n2 <= m
-  | _ -> x = y 
+  |NplusOO n1, NplusOO n2			-> n1 >= n2
+  |NminusOO n1, NminusOO n2			-> n1 <= n2
+  | _ -> false
 
 
 (* and infimums of the lattice. *)
@@ -251,5 +253,18 @@ let sem_guard = meet (NplusOO 1)
 let backsem_plus x y r = meet x (sem_minus r y), meet y (sem_minus r x)
 
 let backsem_minus x y r = meet x (sem_plus y r), meet y (sem_minus x r)
-let backsem_times x y r = x, y
-let backsem_div x y r = x, y
+let contient_zero x = (meet x (Bounded(0,0))) <> Bot
+let backsem_times x y r = 
+  let t1 = if (contient_zero y) && (contient_zero r) then x else meet x (sem_div r y)
+  in
+  let t2 = if (contient_zero x) && (contient_zero r) then y else meet y (sem_div r x)
+  in t1,t2
+let backsem_div x y r = 
+let reste y = match y with
+		  | Bot 			-> Bot
+		  | Top 			-> Top
+		  | Bounded (n1,n2) -> Bounded (0, (max (abs(n1)) (abs(n2)))-1)
+		  | NplusOO  n 		-> NplusOO 0
+		  | NminusOO n	    -> NplusOO 0
+in
+meet x (sem_plus (sem_times r y) (reste y)), if (contient_zero x) && (contient_zero r) then y else meet y (sem_div (sem_minus x (reste y)) r)
