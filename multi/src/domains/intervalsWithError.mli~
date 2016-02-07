@@ -1,2 +1,0 @@
-
-type t = Bot | Itv of (Q.t * Q.t)*(Q.t*Q.t)
