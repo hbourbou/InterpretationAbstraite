@@ -1,3 +1,3 @@
 
-type intervalleWithError = Bot | Itv of (Q.t * Q.t)*(Q.t*Q.t)
+type intervalleWithError = Bot | Itv of (float * float)*(float*float)
 include NonRelational.Domain with type t = intervalleWithError
