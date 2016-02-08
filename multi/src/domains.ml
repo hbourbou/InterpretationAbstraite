@@ -14,7 +14,7 @@ let available_domains : (module Relational.Domain) list =
    (* (module GraphDomain.Dom); *)
    (module (NonRelational.MakeRelational (Intervals.Int)));
    (module (NonRelational.MakeRelational (Intervals.Real)));
-
+   (module (NonRelational.MakeRelational (IntervalsWithError)));
    (module (NonRelational.MakeRelational (Kildall.Int)));
    (module (NonRelational.MakeRelational (Kildall.Real))) 
 
