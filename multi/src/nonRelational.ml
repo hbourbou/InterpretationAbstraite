@@ -144,7 +144,7 @@ module MakeRelational (D : Domain) : Relational.Domain = struct
   let widening = join_f "∇" D.widening
 
   let rec eval_expr env e = match e.Ast.expr_desc with
-    | Ast.Cst n -> eval_expr env (Ast.mk_expr e.Ast.expr_loc e.Ast.expr_type (Ast.Rand (n, n)))
+    | Ast.Cst (n,ns) -> eval_expr env (Ast.mk_expr e.Ast.expr_loc e.Ast.expr_type (Ast.Rand ((n,ns), (n,ns))))
     | Ast.Var n -> find_or_top n env
     | Ast.Binop (bop, e1, e2) ->
       let v1 = eval_expr env e1 in
@@ -158,7 +158,7 @@ module MakeRelational (D : Domain) : Relational.Domain = struct
       Report.nlogf 5 "%s@ %a@ %a@ = %a."
         s D.fprint v1 D.fprint v2 D.fprint v;
       v
-    | Ast.Rand (n1, n2) ->
+    | Ast.Rand ((n1, _), (n2, _)) ->
       let v = D.sem_itv n1 n2 in
       Report.nlogf 5 "sem_itv@ %a@ %a@ = %a." Q.pp_print n1 Q.pp_print n2 D.fprint v;
       v
@@ -179,7 +179,7 @@ module MakeRelational (D : Domain) : Relational.Domain = struct
       t
 	    
   let rec backeval_expr env e t = match e.Ast.expr_desc with
-    | Ast.Cst b -> backeval_expr env (Ast.mk_expr e.Ast.expr_loc e.Ast.expr_type (Ast.Rand (b, b))) t
+    | Ast.Cst (b,bs) -> backeval_expr env (Ast.mk_expr e.Ast.expr_loc e.Ast.expr_type (Ast.Rand ((b,bs), (b,bs)))) t
     | Ast.Var n ->
       let t' = find_or_top n env in
       let t = meet_print t t' in
@@ -219,7 +219,7 @@ module MakeRelational (D : Domain) : Relational.Domain = struct
 	  let pre_expr, post_val = 
 	    (match base_type, sl with
 	    | Ast.IntT, Ast.Strict -> (* e > 0, ie. e >= 1, ie. e-1 >= 0 *) 
-	      let minus_one = Ast.mk_cst_expr e.Ast.expr_loc e.Ast.expr_type Q.minus_one in
+	      let minus_one = Ast.mk_cst_expr e.Ast.expr_loc e.Ast.expr_type (Q.minus_one, "-1") in
 	      let f op e = Ast.mk_expr e.Ast.expr_loc Ast.IntT (Ast.Binop (op, e, minus_one)) in
 	      (f Ast.Plus), (fun x -> D.sem_plus x (D.sem_itv Q.one Q.one))
 	    | Ast.IntT, Ast.Loose (* e >= 0 *)

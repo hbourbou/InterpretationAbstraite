@@ -34,10 +34,10 @@ val pp_base_type: Format.formatter -> base_type -> unit
 (* Untyped AST *)
 
 type uexpr =
-  | UCst of Location.t * (Q.t * base_type option) (** n *)
+  | UCst of Location.t * (Q.t * string * base_type option) (** n *)
   | UVar of Location.t  * Name.t  (** v *)
   | UBinop of Location.t * bop * uexpr * uexpr    (** expr + expr,... *)
-  | URand of Location.t * base_type * Q.t * Q.t    (** rand(n, n) *)
+  | URand of Location.t * base_type * (Q.t *string) * (Q.t *string)    (** rand(n, n) *)
   | UCall of Location.t * Name.t * uexpr list
   | UCond of Location.t * uexpr * cmp 
 
@@ -52,10 +52,10 @@ type ustm =
 (* Typed Ast *) 
 
 type expr_desc =
-  | Cst of Q.t (** n *)
+  | Cst of Q.t * string (** n *)
   | Var of Name.t  (** v *)
   | Binop of bop * expr * expr    (** expr + expr,... *)
-  | Rand of Q.t * Q.t    (** rand(n, n) *)
+  | Rand of (Q.t * string) * (Q.t *string)    (** rand(n, n) *)
   | Call of Name.t * expr list
   | Cond of expr * cmp 
 
@@ -108,7 +108,7 @@ val vars_of_stm : stm -> Name.Set.t
 
 val mk_expr : Location.t -> base_type -> expr_desc -> expr
 val mk_cond : Location.t -> expr -> cmp  -> expr
-val mk_cst_expr : Location.t -> base_type -> Q.t -> expr
+val mk_cst_expr : Location.t -> base_type -> Q.t * string -> expr
 (** {2 Printing Functions} *)
 
 val char_of_bop : bop -> char

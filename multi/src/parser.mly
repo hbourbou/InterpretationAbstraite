@@ -32,7 +32,7 @@ let build_call l name el = Ast.UCall (l, name, el)
 let build_comp l bop e1 e2 sl = Ast.UCond (l, (build l bop e1 e2), sl)
 %}
 
-%token <Q.t * Ast.base_type> NUM
+%token <Q.t * string * Ast.base_type> NUM
 %token <string> VAR
 %token LPAR RPAR SEMICOL LOWER_SEMICOL COMMA RAND_ITV EQUAL IF ELSE WHILE LBRA RBRA DBLPOINT
 %token PLUS2 MINUS2
@@ -105,20 +105,20 @@ stm:
 | VAR TIMES EQUAL expr SEMICOL { build_op_eq (loc ()) $1 Ast.Times $4 }
 | VAR DIV EQUAL expr SEMICOL { build_op_eq (loc ()) $1 Ast.Div $4 }
 /* syntactic sugar : ++x ~~> x = x + 1 */
-| PLUS2 VAR SEMICOL { build_op_eq (loc ()) $2 Ast.Plus (Ast.UCst (loc (), (Q.of_int 1, None))) }
-| VAR PLUS2 SEMICOL { build_op_eq (loc ()) $1 Ast.Plus (Ast.UCst (loc (), (Q.of_int 1, None))) }
-| MINUS2 VAR SEMICOL { build_op_eq (loc ()) $2 Ast.Minus (Ast.UCst (loc (), (Q.of_int 1, None))) }
-| VAR MINUS2 SEMICOL { build_op_eq (loc ()) $1 Ast.Minus (Ast.UCst (loc (), (Q.of_int 1, None))) }
+| PLUS2 VAR SEMICOL { build_op_eq (loc ()) $2 Ast.Plus (Ast.UCst (loc (), (Q.of_int 1, "1", None))) }
+| VAR PLUS2 SEMICOL { build_op_eq (loc ()) $1 Ast.Plus (Ast.UCst (loc (), (Q.of_int 1, "1", None))) }
+| MINUS2 VAR SEMICOL { build_op_eq (loc ()) $2 Ast.Minus (Ast.UCst (loc (), (Q.of_int 1, "1", None))) }
+| VAR MINUS2 SEMICOL { build_op_eq (loc ()) $1 Ast.Minus (Ast.UCst (loc (), (Q.of_int 1, "1", None))) }
 
 
 expr:
-| NUM { let x, t = $1 in Ast.UCst (loc (), (x, Some t)) }
+| NUM { let x, xs, t = $1 in Ast.UCst (loc (), (x, xs, Some t)) }
 | VAR { Ast.UVar (loc (), $1) }
 | RAND_ITV LPAR signed_num COMMA signed_num RPAR { 
-  let x1, t1 = $3 and
-      x2, t2 = $5 in
+  let x1, x1s, t1 = $3 and
+      x2, x2s, t2 = $5 in
   if t1 = t2 then
-    Ast.URand (loc (), t1, x1, x2)
+    Ast.URand (loc (), t1, (x1, x1s), (x2, x2s))
   else
     failwith "range with different types"
 }
@@ -128,7 +128,7 @@ expr:
 | expr TIMES expr { build (loc ()) Ast.Times $1 $3 }
 | expr DIV expr { build (loc ()) Ast.Div $1 $3 }
 /* syntactic sugar : -e ~~> 0 - e */
-| MINUS expr %prec UMINUS { build (loc ()) Ast.Minus (Ast.UCst (loc (), (Q.of_int 0, None))) $2 }
+| MINUS expr %prec UMINUS { build (loc ()) Ast.Minus (Ast.UCst (loc (), (Q.of_int 0, "0", None))) $2 }
 | VAR LPAR exprlist RPAR { build_call (loc ()) $1 $3 }
 /* everything rephrased as expr >= 0 or expr > 0 */
 | expr GT expr { build_comp (loc ()) Ast.Minus $1 $3 Ast.Strict }
@@ -143,4 +143,4 @@ exprlist:
 
 signed_num:
 | NUM { $1 }
-| MINUS NUM  { let x, t = $2 in Q.neg x, t }
+| MINUS NUM  { let x, xs, t = $2 in Q.neg x, "-" ^ xs, t }

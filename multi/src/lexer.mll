@@ -72,14 +72,14 @@ rule token = parse
   | '<' { LT }
   | ">=" { GE }
   | "<=" { LE }
-  | (('0' | (['1'-'9'] digit*)) as n1) ('.' ((digit*) as n2))? { NUM (q_of_string n1 n2, Ast.RealT) }
-  | '.' ((digit+) as n) { NUM (q_of_string "" (Some n), Ast.RealT) }
+  | ((('0' | (['1'-'9'] digit*)) as n1) ('.' ((digit*) as n2))?) as s { NUM (q_of_string n1 n2, s, Ast.RealT) }
+  | '.' ((digit+) as n) as s { NUM (q_of_string "" (Some n), s, Ast.RealT) }
   | ('0' | (['1'-'9'] digit*)) as n
       { (* let n = *)
         (*   try int_of_string n *)
         (*   with Failure "int_of_string" -> *)
         (*     raise (Lexing_error "constant overflow") in *)
-        NUM (Q.of_string n, Ast.IntT) }
+        NUM (Q.of_string n, n, Ast.IntT) }
   | (['_']* alpha (alpha|digit|['_'])*) as n { VAR n }
   | eof { EOF }
   | _ { raise (Lexing_error "unknown char") }

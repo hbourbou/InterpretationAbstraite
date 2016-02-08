@@ -32,10 +32,10 @@ let pp_base_type fmt = function
 (* Untyped AST *)
 
 type uexpr =
-  | UCst of Location.t * (Q.t * base_type option) (** n *)
+  | UCst of Location.t * (Q.t * string * base_type option) (** n *)
   | UVar of Location.t * Name.t  (** v *)
   | UBinop of Location.t * bop * uexpr * uexpr    (** expr + expr,... *)
-  | URand of Location.t * base_type * Q.t * Q.t    (** rand(n, n) *)
+  | URand of Location.t * base_type * (Q.t *string) * (Q.t *string)    (** rand(n, n) *)
   | UCall of Location.t * Name.t * uexpr list
   | UCond of Location.t * uexpr * cmp 
 
@@ -51,10 +51,10 @@ type ustm =
 (* Typed Ast *) 
 				
 type expr_desc =
-  | Cst of Q.t (** n *)
+  | Cst of Q.t * string (** n *)
   | Var of Name.t  (** v *)
   | Binop of bop * expr * expr    (** expr + expr,... *)
-  | Rand of Q.t * Q.t    (** rand(n, n) *)
+  | Rand of (Q.t * string) * (Q.t *string)    (** rand(n, n) *)
   | Call of Name.t * expr list
   | Cond of expr * cmp
 
@@ -75,7 +75,7 @@ type stm =
   | Nop of Location.t
 
 let rec cmp_expr e1 e2 = match e1.expr_desc, e2.expr_desc with
-  | Cst n1, Cst n2 -> Q.compare n1 n2
+  | Cst (n1,_), Cst (n2,_) -> Q.compare n1 n2
   | Cst _, _ -> -1
   | Var _, Cst _ -> 1
   | Var n1, Var n2 -> compare n1 n2
@@ -89,7 +89,7 @@ let rec cmp_expr e1 e2 = match e1.expr_desc, e2.expr_desc with
        if r <> 0 then r else cmp_expr e12 e22
   | Binop _, _ -> -1
   | Rand _, (Cst _ | Var _ | Binop _) -> 1
-  | Rand (n11, n12), Rand (n21, n22) ->
+  | Rand ((n11, _), (n12, _)), Rand ((n21, _), (n22, _)) ->
      let r = Q.compare n11 n21 in
      if r <> 0 then r
      else Q.compare n12 n22
@@ -126,7 +126,7 @@ let rec vars_of_expr s e = match e.expr_desc with
 
 let mk_expr l t d = { expr_type = t; expr_loc = l; expr_desc = d }
 let mk_cond l d sl = { expr_type = BoolT; expr_loc = l; expr_desc = Cond (d, sl) }
-let mk_cst_expr l t v = mk_expr l t (Cst v)
+let mk_cst_expr l t (v,v_s) = mk_expr l t (Cst (v,v_s))
 
 let neg_guard e = 
   match e.expr_desc with
@@ -135,7 +135,7 @@ let neg_guard e =
       mk_expr 
 	e.expr_loc
 	e.expr_type 
-	(Binop (Minus, mk_cst_expr e.expr_loc e.expr_type Q.zero, e))
+	(Binop (Minus, mk_cst_expr e.expr_loc e.expr_type (Q.zero, "0"), e))
     in
     mk_expr e.expr_loc BoolT (Cond (minus_e, (match sl with Loose -> Strict | Strict -> Loose)))
   | _ -> assert false
@@ -183,7 +183,7 @@ let fprint_expr ff e =
     | Plus | Minus -> 0
     | Times | Div -> 1 in
   let rec fprint_expr_prior prior ff e = match e.expr_desc with
-    | Cst c -> Format.fprintf ff "%a" Q.pp_print c
+    | Cst (c,s) -> Format.fprintf ff "%s" s
     | Var n -> Format.fprintf ff "%s" n
     | Binop (bop, e1, e2) ->
       (if prior_bop bop < prior then
@@ -193,8 +193,8 @@ let fprint_expr ff e =
         (fprint_expr_prior (prior_bop bop)) e1
         (char_of_bop bop)
         (fprint_expr_prior (prior_bop bop + 1)) e2
-    | Rand (c1, c2) ->
-      Format.fprintf ff "rand(@[%a,@ %a@])" Q.pp_print c1 Q.pp_print c2 
+    | Rand ((_,c1), (_,c2)) ->
+      Format.fprintf ff "rand(@[%s,@ %s@])" c1 c2 
     | Call(n, el) ->
       Format.fprintf ff "@[<h>%s(%a)@]"
 	n

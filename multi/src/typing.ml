@@ -29,7 +29,7 @@ Format.eprintf "Typing error at loc %a. Found type %a, expecting type %a@.@?"
 (*     type_error l typ Ast.RealT *)
 let rec get_used_type env ue =
   match ue with
-  | Ast.UCst (_, (_, t)) -> t
+  | Ast.UCst (_, (_, _, t)) -> t
   | Ast.URand (_, t, _, _) -> Some t
   | Ast.UCall (_,f,_) -> let t, _ = List.assoc f Basic_library.functions in Some t
   | Ast.UVar (l, n) -> let _, n_t = get_env_type l env n in Some n_t
@@ -45,17 +45,17 @@ let rec get_used_type env ue =
 let rec type_expr (env:typing_env) typ (ue: Ast.uexpr) =
   let te = type_expr env typ in
   match ue with
-  | Ast.UCst (l, (c, t)) -> (
+  | Ast.UCst (l, (c, cs, t)) -> (
     match t with
       None -> if typ = Ast.IntT && (Z.equal (Q.den c) Z.one) then
-	  Ast.mk_expr l Ast.IntT (Ast.Cst c)
+	  Ast.mk_expr l Ast.IntT (Ast.Cst (c, cs))
 	else if typ = Ast.RealT then
-	  Ast.mk_expr l Ast.RealT (Ast.Cst c)
+	  Ast.mk_expr l Ast.RealT (Ast.Cst (c, cs))
 	else
 	  failwith "Unable to compute type"
     | Some t -> 
       if typ = t then
-	Ast.mk_expr l typ (Ast.Cst c)
+	Ast.mk_expr l typ (Ast.Cst (c, cs))
       else 
 	type_error l typ t
   )
