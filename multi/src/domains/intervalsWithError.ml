@@ -65,7 +65,7 @@ let mk_itv i1 i2 = if Q.leq i1  i2 then
 			in
 			Itv ((i1, e1),(i2,e2)) 
 		    else Bot
-let sem_itv n1 n2 = mk_itv n1 n2
+let sem_itv (n1,_) (n2,_) = mk_itv n1 n2
 
 let sem_plus x y = match x, y with
   | Bot, _ -> Bot

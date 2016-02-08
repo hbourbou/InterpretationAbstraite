@@ -70,7 +70,7 @@ module type Domain = sig
 
   (** [sem_itv n1 n2] returns an abstraction [t] of the interval \[n1, n2\]:
       {[[n1, n2] \subseteq \gamma(t).]} *)
-  val sem_itv : Q.t -> Q.t -> t
+  val sem_itv : (Q.t *string) -> (Q.t *string) -> t
 
   (** Semantics of four basic arithmetic operations. *)
 

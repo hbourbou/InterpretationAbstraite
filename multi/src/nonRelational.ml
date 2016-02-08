@@ -32,7 +32,7 @@ module type Domain = sig
   val join : t -> t -> t
   val meet : t -> t -> t
   val widening : t -> t -> t
-  val sem_itv : Q.t -> Q.t -> t
+  val sem_itv : (Q.t*string) -> (Q.t*string) -> t
   val sem_plus : t -> t -> t
   val sem_minus : t -> t -> t
   val sem_times : t -> t -> t
@@ -158,8 +158,8 @@ module MakeRelational (D : Domain) : Relational.Domain = struct
       Report.nlogf 5 "%s@ %a@ %a@ = %a."
         s D.fprint v1 D.fprint v2 D.fprint v;
       v
-    | Ast.Rand ((n1, _), (n2, _)) ->
-      let v = D.sem_itv n1 n2 in
+    | Ast.Rand ((n1, n1s), (n2, n2s)) ->
+      let v = D.sem_itv (n1,n1s) (n2,n2s) in
       Report.nlogf 5 "sem_itv@ %a@ %a@ = %a." Q.pp_print n1 Q.pp_print n2 D.fprint v;
       v
     | Ast.Call (f, args) -> (* TODO *) D.top
@@ -221,7 +221,7 @@ module MakeRelational (D : Domain) : Relational.Domain = struct
 	    | Ast.IntT, Ast.Strict -> (* e > 0, ie. e >= 1, ie. e-1 >= 0 *) 
 	      let minus_one = Ast.mk_cst_expr e.Ast.expr_loc e.Ast.expr_type (Q.minus_one, "-1") in
 	      let f op e = Ast.mk_expr e.Ast.expr_loc Ast.IntT (Ast.Binop (op, e, minus_one)) in
-	      (f Ast.Plus), (fun x -> D.sem_plus x (D.sem_itv Q.one Q.one))
+	      (f Ast.Plus), (fun x -> D.sem_plus x (D.sem_itv (Q.one, "1") (Q.one, "1")))
 	    | Ast.IntT, Ast.Loose (* e >= 0 *)
 	    | Ast.RealT, _ -> (fun id -> id), (fun id -> id)
 	    | _ -> assert false)

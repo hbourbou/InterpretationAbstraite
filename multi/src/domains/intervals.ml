@@ -54,7 +54,7 @@ let widening x y = match x, y with
     let f = if Q.leq d b then b else Q.inf in
     Itv (e, f)
 
-let sem_itv n1 n2 = mk_itv n1 n2
+let sem_itv (n1,_) (n2,_) = mk_itv n1 n2
 
 let sem_plus x y = match x, y with
   | Bot, _ -> Bot

@@ -71,7 +71,7 @@ let meet x y = match x, y with
 
 let widening = join
 
-let sem_itv n1 n2 =
+let sem_itv (n1, _) (n2, _) =
   if Q.gt n1 n2 then
     Bot
   else if Q.equal n1 n2 then

@@ -59,7 +59,7 @@ let meet x y = match x, y with
   | Cst n1, Cst n2 -> if Q.equal n1 n2 then x else Bot
 let widening = join
 
-let sem_itv n1 n2 = if Q.gt n1 n2 then Bot else if Q.equal n1 n2 then Cst n1 else Top
+let sem_itv (n1,_) (n2,_) = if Q.gt n1 n2 then Bot else if Q.equal n1 n2 then Cst n1 else Top
 
 let sem_geq0 = function
   | Bot -> Bot
