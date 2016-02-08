@@ -7,20 +7,32 @@ let name = "interval" ^ I.name_suffix
 let base_type = I.base_type
 
 (* no option *)
-let parse_param _ = ()
 
-let fprint_help fmt = Format.fprintf fmt "Interval abstraction"
+let print_decimal_mode = ref false
+let parse_param s = match s with 
+  | "interval_real:decimal" -> print_decimal_mode := true
+  | _ -> Format.eprintf "Unknown option: %s@.@?" s; assert false
+
+let fprint_help fmt = Format.fprintf fmt "Interval abstraction with rational. Option decimal change the print mode"
 
 
 type t = Bot | Itv of Q.t * Q.t
 (* The module Infint extends 64 bits integers with -oo and +oo
  * with some arithmetic operations. *)
 
+let q_to_string q = 
+  if !print_decimal_mode then
+    let num = Q.num q and denum = Q.den q in
+    let numz = Z.to_float num and denumz = Z.to_float denum in
+    string_of_float (numz /. denumz )
+  else
+    Q.to_string q
+
 let fprint ff = function
   | Bot -> Format.fprintf ff "⊥"
   | Itv (a, b) -> Format.fprintf ff "%s%s, %s%s"
     (if Q.equal a Q.minus_inf then "(" else "[")
-    (Q.to_string a) (Q.to_string b)
+    (q_to_string a) (q_to_string b)
     (if Q.equal b Q.inf then ")" else "]")
 
 let order x y = match x, y with
