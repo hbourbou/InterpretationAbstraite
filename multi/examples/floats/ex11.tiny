@@ -1,4 +1,4 @@
-var x,y:real;
+real x,y;
 
 x = rand(3., 6.);
 x *= 2.;
