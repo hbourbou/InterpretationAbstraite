@@ -1,6 +1,6 @@
 /* les commentaires
  * sont au format C. */
-real  y,x;
+int  y,x;
 x = rand(0, 12);
 y = 42;
 while (x > 0) {
