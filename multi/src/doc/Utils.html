@@ -27,25 +27,50 @@
 <link title="InfInt" rel="Chapter" href="InfInt.html"><title>Utils</title>
 </head>
 <body>
-<div class="navbar"><a href="Report.html">Previous</a>
-&nbsp;<a href="index.html">Up</a>
-&nbsp;<a href="Dummy.html">Next</a>
+<div class="navbar"><a class="pre" href="Report.html" title="Report">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Dummy.html" title="Dummy">Next</a>
 </div>
-<center><h1>Module <a href="type_Utils.html">Utils</a></h1></center>
-<br>
-<pre><span class="keyword">module</span> Utils: <code class="code">sig</code> <a href="Utils.html">..</a> <code class="code">end</code></pre>Various utility functions.<br>
+<h1>Module <a href="type_Utils.html">Utils</a></h1>
+
+<pre><span class="keyword">module</span> Utils: <code class="code">sig</code> <a href="Utils.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Various utility functions.<br>
+</div>
 <hr width="100%">
-<pre><span id="VALlines_of_string"><span class="keyword">val</span> lines_of_string</span> : <code class="type">string -> int</code></pre><div class="info">
+
+<pre><span id="VALprofile"><span class="keyword">val</span> profile</span> : <code class="type">(unit -> 'a) -> 'a * float</code></pre><div class="info ">
+<code class="code">profile f</code> executes the function <code class="code">f</code> and returns both its result
+    and the execution time in second.<br>
+</div>
+
+<pre><span id="VALlines_of_string"><span class="keyword">val</span> lines_of_string</span> : <code class="type">string -> int</code></pre><div class="info ">
 Returns the number of '\n' appearing in a string.<br>
 </div>
-<pre><span id="VALoutput_filename_string"><span class="keyword">val</span> output_filename_string</span> : <code class="type">string option -> string</code></pre><div class="info">
+
+<pre><span id="VALoutput_filename_string"><span class="keyword">val</span> output_filename_string</span> : <code class="type">string option -> string</code></pre><div class="info ">
 Returns string in option or "stdout" if None given.<br>
 </div>
-<pre><span id="VALwith_out_ch"><span class="keyword">val</span> with_out_ch</span> : <code class="type">string option -> (Pervasives.out_channel -> 'a) -> 'a</code></pre><div class="info">
+
+<pre><span id="VALwith_out_ch"><span class="keyword">val</span> with_out_ch</span> : <code class="type">string option -> (Pervasives.out_channel -> 'b) -> 'b</code></pre><div class="info ">
 Open an output channel on given filename, gives it to the given function and
     eventually closes the channel. stdout is used if no filename is given.<br>
 </div>
-<pre><span id="VALwith_in_ch"><span class="keyword">val</span> with_in_ch</span> : <code class="type">string option -> (Pervasives.in_channel -> 'a) -> 'a</code></pre><div class="info">
+
+<pre><span id="VALwith_in_ch"><span class="keyword">val</span> with_in_ch</span> : <code class="type">string option -> (Pervasives.in_channel -> 'b) -> 'b</code></pre><div class="info ">
 Same as <code class="code">with_out_ch</code> for input channels (with stdin instead of stdout).<br>
+</div>
+
+<pre><span id="VALselect_param"><span class="keyword">val</span> select_param</span> : <code class="type">string -> string -> string</code></pre><div class="info ">
+<code class="code">select_param n p</code> cuts the string <code class="code">p</code> into <code class="code">n'</code> and <code class="code">p'</code> such
+    that <code class="code">p</code> = <code class="code">n':p'</code> and n' doesn't contain the character ':'. Then,
+    if <code class="code">n</code> = <code class="code">n'</code>, <code class="code">p'</code> is returned, otherwise the empty string is
+    returned. If <code class="code">p</code> doesn't contain the character ':', it is returned
+    unchanged.<br>
+</div>
+
+<pre><span id="VALwarn_unknown_param"><span class="keyword">val</span> warn_unknown_param</span> : <code class="type">string -> string -> unit</code></pre><div class="info ">
+<code class="code">warn_unknown_param n p</code> does nothin if <code class="code">p</code> is the empty string
+    and outputs a warning otherwise (using <code class="code">Report.warning</code>), saying
+    that parameter <code class="code">p</code> is unrecognized by domain <code class="code">n</code>.<br>
 </div>
 </body></html>

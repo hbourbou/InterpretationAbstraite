@@ -48,3 +48,8 @@ val select_param : string -> string -> string
     and outputs a warning otherwise (using [Report.warning]), saying
     that parameter [p] is unrecognized by domain [n]. *)
 val warn_unknown_param : string -> string -> unit
+
+
+val fprintf_list:  sep:('a, 'b, 'c, 'd, 'd, 'a) CamlinternalFormatBasics.format6 ->
+           (Format.formatter -> 'e -> unit) ->
+           Format.formatter -> 'e list -> unit

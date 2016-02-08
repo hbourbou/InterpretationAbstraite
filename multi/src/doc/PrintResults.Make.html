@@ -25,10 +25,10 @@
 <link title="InfInt" rel="Chapter" href="InfInt.html"><title>PrintResults.Make</title>
 </head>
 <body>
-<div class="navbar">&nbsp;<a href="PrintResults.html">Up</a>
+<div class="navbar">&nbsp;<a class="up" href="PrintResults.html" title="PrintResults">Up</a>
 &nbsp;</div>
-<center><h1>Functor <a href="type_PrintResults.Make.html">PrintResults.Make</a></h1></center>
-<br>
+<h1>Functor <a href="type_PrintResults.Make.html">PrintResults.Make</a></h1>
+
 <pre><span class="keyword">module</span> Make: <div class="sig_block"><code class="code">functor (</code><code class="code">Dom</code><code class="code"> : </code><code class="type"><a href="Relational.Domain.html">Relational.Domain</a></code><code class="code">) -&gt; </code><code class="code">sig</code> <a href="PrintResults.Make.html">..</a> <code class="code">end</code></div></pre><table border="0" cellpadding="3" width="100%">
 <tr>
 <td align="left" valign="top" width="1%%"><b>Parameters: </b></td>
@@ -57,24 +57,20 @@ The functions of this module take an abstract syntax tree <code class="code">t :
 <li>end of each statement;</li>
 <li>beginning of the then and else branches of each if-then-else statement;</li>
 <li>beginning of the body of each while loop statement;</li>
-<li>and finally beginning of expressions used as guards in while loop
-        statements, this last case being the loop invariant.</li>
+<li>and finally beginning of guards in while loop statements,
+        this last case being the loop invariant.</li>
 </ul>
 
       In each case, an absence of value is soundly interpreted as <code class="code">Dom.top</code>.<br>
-<pre><span id="VALalarms"><span class="keyword">val</span> alarms</span> : <code class="type">Dom.t Location.Map.t -> <a href="Ast.html#TYPEstm">Ast.stm</a> -> bool</code></pre><div class="info">
-<code class="code">alarms m t</code> uses informations contained in <code class="code">m</code> (as described above)
-      to print warnings (using <code class="code">Report.warning_loc</code>) about possible
-      empty rand intervals, divisions by zero and code proven to be dead.
-<p>
 
-      Returns <code class="code">true</code> if possible runtime errors (empty rand intervals or
-      division by zero) are found, <code class="code">false</code> if the program is proven without
-      runtime errors.<br>
-</div>
-<pre><span id="VALprint"><span class="keyword">val</span> print</span> : <code class="type">Dom.t Location.Map.t -> <a href="Ast.html#TYPEstm">Ast.stm</a> -> string option -> unit</code></pre><div class="info">
+<pre><span id="VALprint"><span class="keyword">val</span> print</span> : <code class="type">Dom.t Location.Map.t -> <a href="Ast.html#TYPEstm">Ast.stm</a> -> string option -> unit</code></pre><div class="info ">
 <code class="code">print m t output_filename</code> prints the statement <code class="code">t</code>, with results
       contained in <code class="code">m</code> (as described above) interleaved in comments in file
       <code class="code">output_filename</code> (or stdout if <code class="code">output_filename</code> is <code class="code">None</code>).<br>
+</div>
+
+<pre><span id="VALprint_invariants"><span class="keyword">val</span> print_invariants</span> : <code class="type">Dom.t Location.Map.t -> <a href="Ast.html#TYPEstm">Ast.stm</a> -> string option -> unit</code></pre><div class="info ">
+Same as <code class="code">print</code> but only print loop invariants (in the same
+      order that the <code class="code">while</code> keywords appear in the code).<br>
 </div>
 </body></html>

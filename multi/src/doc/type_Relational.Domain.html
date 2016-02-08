@@ -22,19 +22,24 @@
 <link title="InfInt" rel="Chapter" href="InfInt.html"><title>Relational.Domain</title>
 </head>
 <body>
-<code class="code"><span class="keyword">sig</span><br>
-&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;fprint&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;order&nbsp;:&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;top&nbsp;:&nbsp;<span class="constructor">Name</span>.<span class="constructor">Set</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;bottom&nbsp;:&nbsp;<span class="constructor">Name</span>.<span class="constructor">Set</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;join&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;meet&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;widening&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;assignment&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Name</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Ast</span>.expr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;guard&nbsp;:&nbsp;<span class="constructor">Ast</span>.expr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t<br>
+<code class="code"><span class="keyword">sig</span>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;name&nbsp;:&nbsp;string
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;parse_param&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;fprint_help&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;fprint&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;order&nbsp;:&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;top&nbsp;:&nbsp;<span class="constructor">Name</span>.<span class="constructor">Set</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;bottom&nbsp;:&nbsp;<span class="constructor">Name</span>.<span class="constructor">Set</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;is_bottom&nbsp;:&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;join&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;meet&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;widening&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;assignment&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Name</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Ast</span>.expr&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;guard&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Ast</span>.expr&nbsp;*&nbsp;<span class="constructor">Ast</span>.cmp&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Relational</span>.<span class="constructor">Domain</span>.t
 <span class="keyword">end</span></code></body></html>

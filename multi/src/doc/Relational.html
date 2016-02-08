@@ -27,15 +27,22 @@
 <link title="InfInt" rel="Chapter" href="InfInt.html"><title>Relational</title>
 </head>
 <body>
-<div class="navbar"><a href="Parse.html">Previous</a>
-&nbsp;<a href="index.html">Up</a>
-&nbsp;<a href="PrintResults.html">Next</a>
+<div class="navbar"><a class="pre" href="Parse.html" title="Parse">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="PrintResults.html" title="PrintResults">Next</a>
 </div>
-<center><h1>Module <a href="type_Relational.html">Relational</a></h1></center>
-<br>
-<pre><span class="keyword">module</span> Relational: <code class="code">sig</code> <a href="Relational.html">..</a> <code class="code">end</code></pre>A module type for relational domains.<br>
+<h1>Module <a href="type_Relational.html">Relational</a></h1>
+
+<pre><span class="keyword">module</span> Relational: <code class="code">sig</code> <a href="Relational.html">..</a> <code class="code">end</code></pre><div class="info module top">
+A module type for relational domains.<br>
+</div>
 <hr width="100%">
+
 <pre><span class="keyword">module type</span> <a href="Relational.Domain.html">Domain</a> = <code class="code">sig</code> <a href="Relational.Domain.html">..</a> <code class="code">end</code></pre><div class="info">
 Module type for relational domains.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Relational.Prod.html">Prod</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">D1</code><code class="code"> : </code><code class="type"><a href="Relational.Domain.html">Domain</a></code><code class="code">) -&gt; </code><div class="sig_block"><code class="code">functor (</code><code class="code">D2</code><code class="code"> : </code><code class="type"><a href="Relational.Domain.html">Domain</a></code><code class="code">) -&gt; </code><code class="code">sig</code> <a href="Relational.Prod.html">..</a> <code class="code">end</code></div></div></pre><div class="info">
+Product functor for relational domains.
 </div>
 </body></html>

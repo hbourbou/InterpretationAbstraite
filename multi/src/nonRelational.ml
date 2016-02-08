@@ -94,6 +94,11 @@ module MakeRelational (D : Domain) : Relational.Domain = struct
 
   let is_bottom t = match t with EnvBot -> true | Env m -> Name.Map.exists (fun _ v -> D.is_bottom v) m
 
+  let get_vars t = 
+    match t with 
+    | EnvBot -> Name.Set.empty 
+    | Env m -> Name.Map.fold (fun k _ s -> Name.Set.add k s) m Name.Set.empty
+
   let join_f s f t1 t2 = match t1, t2 with
     | EnvBot, _ -> t2
     | _, EnvBot -> t1
@@ -157,6 +162,8 @@ module MakeRelational (D : Domain) : Relational.Domain = struct
       let v = D.sem_itv n1 n2 in
       Report.nlogf 5 "sem_itv@ %a@ %a@ = %a." Q.pp_print n1 Q.pp_print n2 D.fprint v;
       v
+    | Ast.Call (f, args) -> (* TODO *) D.top
+    | Ast.Cond _ -> (* TODO guard e env *) D.top 
 
   let assignment n e t = 
     if e.Ast.expr_type = D.base_type then (
@@ -198,42 +205,49 @@ module MakeRelational (D : Domain) : Relational.Domain = struct
       let t = meet_print t t' in
       if order_print 6 t D.bottom then raise Exit
       else env
+    | Ast.Call (f, args) -> (* TODO *) env
+    | Ast.Cond _ -> (* TODO guard e env *) env
 
-  let guard (e, sl) t = 
-    if e.Ast.expr_type = D.base_type then (
-      match t with
-      | EnvBot -> EnvBot
-      | Env m ->
-	let pre_expr, post_val = 
-	  (match base_type, sl with
-	  | Ast.IntT, Ast.Strict -> (* e > 0, ie. e >= 1, ie. e-1 >= 0 *) 
-	    let minus_one = Ast.mk_cst_expr e.Ast.expr_loc e.Ast.expr_type Q.minus_one in
-	    let f op e = Ast.mk_expr e.Ast.expr_loc Ast.IntT (Ast.Binop (op, e, minus_one)) in
-	    (f Ast.Plus), (fun x -> D.sem_plus x (D.sem_itv Q.one Q.one))
-	  | Ast.IntT, Ast.Loose (* e >= 0 *)
-	  | Ast.RealT, _ -> (fun id -> id), (fun id -> id)
-	  | _ -> assert false)
-	in
-	
-	let t = eval_expr m (pre_expr e) in
-	let t' = post_val (D.sem_geq0 t) in
-	Report.nlogf 5 "sem_guard %a%s0 = %a." D.fprint (eval_expr m e) (Ast.string_of_cmp sl) D.fprint t';
-	try Env (backeval_expr m e t')
-	with Exit -> EnvBot
+
+  let guard e t = 
+    match e.Ast.expr_desc with
+    | Ast.Cond (e,sl) -> (
+      if e.Ast.expr_type = D.base_type then (
+	match t with
+	| EnvBot -> EnvBot
+	| Env m -> 
+	  let pre_expr, post_val = 
+	    (match base_type, sl with
+	    | Ast.IntT, Ast.Strict -> (* e > 0, ie. e >= 1, ie. e-1 >= 0 *) 
+	      let minus_one = Ast.mk_cst_expr e.Ast.expr_loc e.Ast.expr_type Q.minus_one in
+	      let f op e = Ast.mk_expr e.Ast.expr_loc Ast.IntT (Ast.Binop (op, e, minus_one)) in
+	      (f Ast.Plus), (fun x -> D.sem_plus x (D.sem_itv Q.one Q.one))
+	    | Ast.IntT, Ast.Loose (* e >= 0 *)
+	    | Ast.RealT, _ -> (fun id -> id), (fun id -> id)
+	    | _ -> assert false)
+	  in
+	  
+	  let t = eval_expr m (pre_expr e) in
+	  let t' = post_val (D.sem_geq0 t) in
+	  Report.nlogf 5 "sem_guard %a%s0 = %a." D.fprint (eval_expr m e) (Ast.string_of_cmp sl) D.fprint t';
+	  try Env (backeval_expr m e t')
+	  with Exit -> EnvBot
+      )
+      else
+	t
     )
-    else
-      t
+    | _ -> assert false
 
-  (* let guard_real e1 e2 t = match t with *)
-  (*   | EnvBot -> EnvBot *)
-  (*   | Env m -> *)
-  (*     let t1, t2 = eval_expr m e1, eval_expr m e2 in *)
-  (*     let t1', t2' = D.backsem_le t1 t2 in *)
-  (*     Report.nlogf 5 "backsem_le@ %a@ %a@ = @[%a,@ %a@]." *)
-  (*       D.fprint t1 D.fprint t2 D.fprint t1' D.fprint t2'; *)
-  (*     try *)
-  (*       let t1'' = Env (backeval_expr m e1 t1') in *)
-  (*       let t2'' = Env (backeval_expr m e2 t2') in *)
-  (*       meet t1'' t2'' *)
-  (*     with Exit -> EnvBot *)
-end
+		      (* let guard_real e1 e2 t = match t with *)
+		      (*   | EnvBot -> EnvBot *)
+		      (*   | Env m -> *)
+		      (*     let t1, t2 = eval_expr m e1, eval_expr m e2 in *)
+		      (*     let t1', t2' = D.backsem_le t1 t2 in *)
+		      (*     Report.nlogf 5 "backsem_le@ %a@ %a@ = @[%a,@ %a@]." *)
+		      (*       D.fprint t1 D.fprint t2 D.fprint t1' D.fprint t2'; *)
+		      (*     try *)
+		      (*       let t1'' = Env (backeval_expr m e1 t1') in *)
+		      (*       let t2'' = Env (backeval_expr m e2 t2') in *)
+		      (*       meet t1'' t2'' *)
+		      (*     with Exit -> EnvBot *)
+		      end

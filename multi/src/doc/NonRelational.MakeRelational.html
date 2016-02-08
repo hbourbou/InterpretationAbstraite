@@ -24,15 +24,18 @@
 <link title="Dummy" rel="Chapter" href="Dummy.html">
 <link title="InfInt" rel="Chapter" href="InfInt.html"><link title="Lattice Structure" rel="Section" href="#2_LatticeStructure">
 <link title="Abstract Operators" rel="Section" href="#2_AbstractOperators">
+<link title="Abstract Operators" rel="Section" href="#2_AbstractOperators">
 <title>NonRelational.MakeRelational</title>
 </head>
 <body>
-<div class="navbar">&nbsp;<a href="NonRelational.html">Up</a>
+<div class="navbar">&nbsp;<a class="up" href="NonRelational.html" title="NonRelational">Up</a>
 &nbsp;</div>
-<center><h1>Functor <a href="type_NonRelational.MakeRelational.html">NonRelational.MakeRelational</a></h1></center>
-<br>
-<pre><span class="keyword">module</span> MakeRelational: <div class="sig_block"><code class="code">functor (</code><code class="code">D</code><code class="code"> : </code><code class="type"><a href="NonRelational.Domain.html">Domain</a></code><code class="code">) -&gt; </code><code class="type"><a href="Relational.Domain.html">Relational.Domain</a></code><code class="type"> </code></div></pre>Functor to build relational domains from non relational ones
+<h1>Functor <a href="type_NonRelational.MakeRelational.html">NonRelational.MakeRelational</a></h1>
+
+<pre><span class="keyword">module</span> MakeRelational: <div class="sig_block"><code class="code">functor (</code><code class="code">D</code><code class="code"> : </code><code class="type"><a href="NonRelational.Domain.html">Domain</a></code><code class="code">) -&gt; </code><code class="type"><a href="Relational.Domain.html">Relational.Domain</a></code><code class="type"> </code></div></pre><div class="info module top">
+Functor to build relational domains from non relational ones
     (by pointwise extension).<br>
+</div>
 <table border="0" cellpadding="3" width="100%">
 <tr>
 <td align="left" valign="top" width="1%%"><b>Parameters: </b></td>
@@ -48,39 +51,71 @@
 </tr>
 </table>
 <hr width="100%">
+
+<pre><span id="VALname"><span class="keyword">val</span> name</span> : <code class="type">string</code></pre><div class="info ">
+Name of the domain. Used to select it via command line
+      arguments. Should be of the form [a-z][a-zA-Z0-9_]*.<br>
+</div>
+
+<pre><span id="VALparse_param"><span class="keyword">val</span> parse_param</span> : <code class="type">string -> unit</code></pre><div class="info ">
+<code class="code">parse_param s</code> parses parameters in <code class="code">s</code>. If <code class="code">s</code> is of the form
+      "dom:s'" where dom doesn't contain ':' and is not <code class="code">name</code>, the
+      parameter should be ignored. If dom is <code class="code">name</code>, only s' should be
+      considered (<code class="code">Utils.select_param name</code> can be used for that). A
+      warning should be issued for unrecognised parameters (use
+      <code class="code">Utils.warn_unknown_param</code>).<br>
+</div>
+
+<pre><span id="VALfprint_help"><span class="keyword">val</span> fprint_help</span> : <code class="type">Format.formatter -> unit</code></pre><div class="info ">
+Outputs some help about the options recognized by
+      <code class="code">parse_param</code>.<br>
+</div>
+
 <pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
-<div class="info">
+<div class="info ">
 Type of abstract values.<br>
 </div>
 
-<pre><span id="VALfprint"><span class="keyword">val</span> fprint</span> : <code class="type">Format.formatter -> <a href="Relational.Domain.html#TYPEt">t</a> -> unit</code></pre><div class="info">
+
+<pre><span id="VALfprint"><span class="keyword">val</span> fprint</span> : <code class="type">Format.formatter -> <a href="Relational.Domain.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
 Prints an abstract value.<br>
 </div>
 <br>
-<span id="2_LatticeStructure"><h2>Lattice Structure</h2></span><br>
-<pre><span id="VALorder"><span class="keyword">val</span> order</span> : <code class="type"><a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> bool</code></pre><div class="info">
+<h2 id="2_LatticeStructure">Lattice Structure</h2><br>
+
+<pre><span id="VALorder"><span class="keyword">val</span> order</span> : <code class="type"><a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
 Order on type <code class="code">t</code>. <code class="code">t</code> with this order must be a lattice.<br>
 </div>
-<pre><span id="VALtop"><span class="keyword">val</span> top</span> : <code class="type">Name.Set.t -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre><pre><span id="VALbottom"><span class="keyword">val</span> bottom</span> : <code class="type">Name.Set.t -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre><div class="info">
+
+<pre><span id="VALtop"><span class="keyword">val</span> top</span> : <code class="type">Name.Set.t -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre>
+<pre><span id="VALbottom"><span class="keyword">val</span> bottom</span> : <code class="type">Name.Set.t -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre>
+<pre><span id="VALis_bottom"><span class="keyword">val</span> is_bottom</span> : <code class="type"><a href="Relational.Domain.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
 Infimums of the lattice (when the relational domain focuses on given set
       of variables).<br>
 </div>
-<pre><span id="VALjoin"><span class="keyword">val</span> join</span> : <code class="type"><a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre><pre><span id="VALmeet"><span class="keyword">val</span> meet</span> : <code class="type"><a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre><div class="info">
+
+<pre><span id="VALjoin"><span class="keyword">val</span> join</span> : <code class="type"><a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre>
+<pre><span id="VALmeet"><span class="keyword">val</span> meet</span> : <code class="type"><a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre><div class="info ">
 Least upper bound and greatest lower bound of the lattice.<br>
 </div>
-<pre><span id="VALwidening"><span class="keyword">val</span> widening</span> : <code class="type"><a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre><div class="info">
+
+<pre><span id="VALwidening"><span class="keyword">val</span> widening</span> : <code class="type"><a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre><div class="info ">
 Widening to ensure termination of the analyses.<br>
 </div>
 <br>
-<span id="2_AbstractOperators"><h2>Abstract Operators</h2></span><br>
+<h2 id="2_AbstractOperators">Abstract Operators</h2><br>
+<br>
+<h2 id="2_AbstractOperators">Abstract Operators</h2><br>
 <br>
 Abstract semantics of assignments and guards.<br>
-<pre><span id="VALassignment"><span class="keyword">val</span> assignment</span> : <code class="type"><a href="Name.html#TYPEt">Name.t</a> -> <a href="Ast.html#TYPEexpr">Ast.expr</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre><div class="info">
+
+<pre><span id="VALassignment"><span class="keyword">val</span> assignment</span> : <code class="type"><a href="Name.html#TYPEt">Name.t</a> -> <a href="Ast.html#TYPEexpr">Ast.expr</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre><div class="info ">
 <code class="code">assignment n e t</code> returns a <code class="code">t'</code> such that:
-      <pre><code class="code">[|n = e;|](\gamma(t)) \subseteq \gamma(t').</code></pre><br>
+      <pre class="codepre"><code class="code">[|n = e;|](\gamma(t)) \subseteq \gamma(t').</code></pre><br>
 </div>
-<pre><span id="VALguard"><span class="keyword">val</span> guard</span> : <code class="type"><a href="Ast.html#TYPEexpr">Ast.expr</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre><div class="info">
+
+<pre><span id="VALguard"><span class="keyword">val</span> guard</span> : <code class="type"><a href="Ast.html#TYPEexpr">Ast.expr</a> * <a href="Ast.html#TYPEcmp">Ast.cmp</a> -> <a href="Relational.Domain.html#TYPEt">t</a> -> <a href="Relational.Domain.html#TYPEt">t</a></code></pre><div class="info ">
 <code class="code">guard e t</code> returns a <code class="code">t'</code> such that:
-      <pre><code class="code">[|e &gt; 0|](\gamma(t)) \subseteq \gamma(t').</code></pre><br>
+      <pre class="codepre"><code class="code">[|e &gt;= 0|](\gamma(t)) \subseteq \gamma(t').</code></pre><br>
 </div>
 </body></html>

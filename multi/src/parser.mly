@@ -27,8 +27,9 @@ let build l bop e1 e2 = (* match bop, Q.compare e2 (Q.of_int 0) with *)
 		   
 let build_op_eq l v bop e = Ast.UAsn (l, v, build l bop (Ast.UVar (l, v)) e)
 
-      
+let build_call l name el = Ast.UCall (l, name, el)     
 
+let build_comp l bop e1 e2 sl = Ast.UCond (l, (build l bop e1 e2), sl)
 %}
 
 %token <Q.t * Ast.base_type> NUM
@@ -44,7 +45,10 @@ let build_op_eq l v bop e = Ast.UAsn (l, v, build l bop (Ast.UVar (l, v)) e)
 %nonassoc SEMICOL
 %nonassoc LOWER_SEMICOL
 %nonassoc VAR IF WHILE PLUS2 MINUS2
+%nonassoc IFX
+%nonassoc ELSE
 %nonassoc SEQ
+%left GT LT GE LE
 %left PLUS MINUS
 %left TIMES DIV
 %nonassoc UMINUS
@@ -55,7 +59,7 @@ let build_op_eq l v bop e = Ast.UAsn (l, v, build l bop (Ast.UVar (l, v)) e)
 %%
 
 file:
-| decls stm EOF { $1 Typing.empty_env, $2 }
+| decls stmts EOF { $1 Typing.empty_env, $2 }
 
 decls:
 | vtype varlist SEMICOL decls {  
@@ -77,14 +81,24 @@ varlist:
 | VAR COMMA varlist { ($1,loc())::$3 }
 | VAR { [$1, loc()] }
     
-      
+
+bloc:
+| LBRA stmts RBRA { $2 }
+| stm { $1 }
+
+stmts:
+| stm { $1 }
+| stm stmts { Ast.USeq (loc (), $1, $2) }
+
+
 stm:
 | VAR EQUAL expr SEMICOL { Ast.UAsn (loc (), $1, $3) }
-| stm stm %prec SEQ { Ast.USeq (loc (), $1, $2) }
-| IF LPAR comp RPAR LBRA stm RBRA ELSE LBRA stm RBRA
-    { Ast.UIte (loc (), $3, $6, $10) }
-| WHILE LPAR comp RPAR LBRA stm RBRA
-    { Ast.UWhile (loc (), $3, $6) }
+| IF LPAR expr RPAR bloc ELSE bloc
+        { Ast.UIte (loc (), $3, $5, $7) }
+| IF LPAR expr RPAR bloc %prec IFX
+        { Ast.UIte (loc (), $3, $5, Ast.UNop(loc ())) }
+| WHILE LPAR expr RPAR bloc
+    { Ast.UWhile (loc (), $3, $5) }
 /* syntactic sugar : v *= e ~~> v = v * e */
 | VAR PLUS EQUAL expr SEMICOL { build_op_eq (loc ()) $1 Ast.Plus $4 }
 | VAR MINUS EQUAL expr SEMICOL { build_op_eq (loc ()) $1 Ast.Minus $4 }
@@ -115,14 +129,18 @@ expr:
 | expr DIV expr { build (loc ()) Ast.Div $1 $3 }
 /* syntactic sugar : -e ~~> 0 - e */
 | MINUS expr %prec UMINUS { build (loc ()) Ast.Minus (Ast.UCst (loc (), (Q.of_int 0, None))) $2 }
-
+| VAR LPAR exprlist RPAR { build_call (loc ()) $1 $3 }
 /* everything rephrased as expr >= 0 or expr > 0 */
-comp: 
-| expr GT expr { build (loc ()) Ast.Minus $1 $3, Ast.Strict }
-| expr LT expr { build (loc ()) Ast.Minus $3 $1, Ast.Strict }
-| expr GE expr { build (loc ()) Ast.Minus $1 $3, Ast.Loose }
-| expr LE expr { build (loc ()) Ast.Minus $3 $1, Ast.Loose }
+| expr GT expr { build_comp (loc ()) Ast.Minus $1 $3 Ast.Strict }
+| expr LT expr { build_comp (loc ()) Ast.Minus $3 $1 Ast.Strict }
+| expr GE expr { build_comp (loc ()) Ast.Minus $1 $3 Ast.Loose }
+| expr LE expr { build_comp (loc ()) Ast.Minus $3 $1 Ast.Loose }
+
+exprlist:
+| expr COMMA exprlist {$1 :: $3}
+| expr                 {[$1]}
+ 
 
 signed_num:
 | NUM { $1 }
-| MINUS NUM { let x, t = $2 in Q.neg x, t }
+| MINUS NUM  { let x, t = $2 in Q.neg x, t }

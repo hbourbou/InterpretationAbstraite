@@ -22,49 +22,54 @@
 <link title="InfInt" rel="Chapter" href="InfInt.html"><title>NonRelational.Domain</title>
 </head>
 <body>
-<code class="code"><span class="keyword">sig</span><br>
-&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;fprint&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;order&nbsp;:&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;top&nbsp;:&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;bottom&nbsp;:&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;join&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;meet&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;widening&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_itv&nbsp;:&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_plus&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_minus&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_times&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_div&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_guard&nbsp;:&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;backsem_plus&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;*&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;backsem_minus&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;*&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;backsem_times&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;*&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;backsem_div&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;*&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t<br>
+<code class="code"><span class="keyword">sig</span>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;name&nbsp;:&nbsp;string
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;parse_param&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;fprint_help&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;base_type&nbsp;:&nbsp;<span class="constructor">Ast</span>.base_type
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;fprint&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;order&nbsp;:&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;top&nbsp;:&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;bottom&nbsp;:&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;is_bottom&nbsp;:&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;join&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;meet&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;widening&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_itv&nbsp;:&nbsp;<span class="constructor">Q</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Q</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_plus&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_minus&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_times&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_div&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sem_geq0&nbsp;:&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;backsem_plus&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;*&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;backsem_minus&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;*&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;backsem_times&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;*&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;backsem_div&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t&nbsp;*&nbsp;<span class="constructor">NonRelational</span>.<span class="constructor">Domain</span>.t
 <span class="keyword">end</span></code></body></html>

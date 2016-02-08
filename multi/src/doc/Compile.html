@@ -27,16 +27,19 @@
 <link title="InfInt" rel="Chapter" href="InfInt.html"><title>Compile</title>
 </head>
 <body>
-<div class="navbar"><a href="Ast.html">Previous</a>
-&nbsp;<a href="index.html">Up</a>
-&nbsp;<a href="Location.html">Next</a>
+<div class="navbar"><a class="pre" href="Ast.html" title="Ast">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Location.html" title="Location">Next</a>
 </div>
-<center><h1>Module <a href="type_Compile.html">Compile</a></h1></center>
-<br>
-<pre><span class="keyword">module</span> Compile: <code class="code">sig</code> <a href="Compile.html">..</a> <code class="code">end</code></pre>Compile TINY files to C files. This mostly consists in declaring
+<h1>Module <a href="type_Compile.html">Compile</a></h1>
+
+<pre><span class="keyword">module</span> Compile: <code class="code">sig</code> <a href="Compile.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Compile TINY files to C files. This mostly consists in declaring
     variables as C integers and copy/pasting the code in a main function.<br>
+</div>
 <hr width="100%">
-<pre><span id="VALcompile"><span class="keyword">val</span> compile</span> : <code class="type">string -> string option -> unit</code></pre><div class="info">
+
+<pre><span id="VALcompile"><span class="keyword">val</span> compile</span> : <code class="type">string -> string option -> unit</code></pre><div class="info ">
 <code class="code">compile input output</code> compiles TINY file <code class="code">input</code> to C file <code class="code">output</code>
     or standard output if no output is provided.<br>
 </div>

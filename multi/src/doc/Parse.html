@@ -27,15 +27,18 @@
 <link title="InfInt" rel="Chapter" href="InfInt.html"><title>Parse</title>
 </head>
 <body>
-<div class="navbar"><a href="NonRelational.html">Previous</a>
-&nbsp;<a href="index.html">Up</a>
-&nbsp;<a href="Relational.html">Next</a>
+<div class="navbar"><a class="pre" href="NonRelational.html" title="NonRelational">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Relational.html" title="Relational">Next</a>
 </div>
-<center><h1>Module <a href="type_Parse.html">Parse</a></h1></center>
-<br>
-<pre><span class="keyword">module</span> Parse: <code class="code">sig</code> <a href="Parse.html">..</a> <code class="code">end</code></pre>Parsing of TINY programs.<br>
+<h1>Module <a href="type_Parse.html">Parse</a></h1>
+
+<pre><span class="keyword">module</span> Parse: <code class="code">sig</code> <a href="Parse.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Parsing of TINY programs.<br>
+</div>
 <hr width="100%">
-<pre><span id="VALfile"><span class="keyword">val</span> file</span> : <code class="type">string -> Name.Set.t * <a href="Ast.html#TYPEstm">Ast.stm</a></code></pre><div class="info">
+
+<pre><span id="VALfile"><span class="keyword">val</span> file</span> : <code class="type">string -> Name.Set.t * <a href="Ast.html#TYPEstm">Ast.stm</a></code></pre><div class="info ">
 <code class="code">file filename</code> returns the abstract syntax tree parsed from file <code class="code">filename</code>
     and the set of variables used in this program.
 <p>

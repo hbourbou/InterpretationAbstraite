@@ -34,21 +34,23 @@ module Make (Dom : Relational.Domain) = struct
       | Ast.Asn (l, n, e) -> Format.fprintf ff "%s = @[%a@];%a"
         n Ast.fprint_expr e fprint_annot (Location.end_p l)
       | Ast.Asrt (l, g) -> Format.fprintf ff "assert(%a);%a"
-        Ast.fprint_guard g fprint_annot (Location.end_p l)
+        Ast.fprint_expr g fprint_annot (Location.end_p l)
       | Ast.Seq (_, s1, s2) ->
         Format.fprintf ff "@[<v>%a@ %a@]" fprint_stm s1 fprint_stm s2
       | Ast.Ite (l, g, s1, s2) ->
         Format.fprintf ff "@[<v>@[<v 2>if (%a) {%a@ %a@]@ @[<v 2>} else {%a@ %a@]@ }%a@]"
-          Ast.fprint_guard g
+          Ast.fprint_expr g
           fprint_annot (Location.beg_p (Ast.loc_of_stm s1)) fprint_stm s1
           fprint_annot (Location.beg_p (Ast.loc_of_stm s2)) fprint_stm s2
           fprint_annot (Location.end_p l)
       | Ast.While (l, g, s) ->
         Format.fprintf ff "@[<v>%a@[<v 2>while (%a) {%a@ %a@]@ }%a@]"
-          fprint_invariant (Location.beg_p (Ast.loc_of_guard g))
-          Ast.fprint_guard g
+          fprint_invariant (Location.beg_p (Ast.loc_of_expr g))
+          Ast.fprint_expr g
           fprint_annot (Location.beg_p (Ast.loc_of_stm s)) fprint_stm s
-          fprint_annot (Location.end_p l) in
+          fprint_annot (Location.end_p l) 
+      | Ast.Nop l -> ()
+    in
     Utils.with_out_ch output_filename (fun out_ch ->
       let ff = Format.formatter_of_out_channel out_ch in
       fprint_stm ff t;
@@ -67,11 +69,12 @@ module Make (Dom : Relational.Domain) = struct
         with Not_found -> Format.fprintf ff "⊤@ " 
       in
       match s with
-      | Ast.Asn _ | Ast.Asrt _ -> ()
+      | Ast.Asn _ | Ast.Asrt _ | Ast.Nop _ -> ()
       | Ast.Seq (_, s1, s2)
       | Ast.Ite (_, _, s1, s2) -> fprint_stm ff s1; fprint_stm ff s2
       | Ast.While (l, g, s) ->
-        fprint_annot ff (Location.beg_p (Ast.loc_of_guard g)); fprint_stm ff s 
+        fprint_annot ff (Location.beg_p (Ast.loc_of_expr g)); fprint_stm ff s 
+
     in
     Utils.with_out_ch output_filename (fun out_ch ->
       let ff = Format.formatter_of_out_channel out_ch in

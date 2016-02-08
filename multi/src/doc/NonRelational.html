@@ -27,18 +27,22 @@
 <link title="InfInt" rel="Chapter" href="InfInt.html"><title>NonRelational</title>
 </head>
 <body>
-<div class="navbar"><a href="Name.html">Previous</a>
-&nbsp;<a href="index.html">Up</a>
-&nbsp;<a href="Parse.html">Next</a>
+<div class="navbar"><a class="pre" href="Name.html" title="Name">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Parse.html" title="Parse">Next</a>
 </div>
-<center><h1>Module <a href="type_NonRelational.html">NonRelational</a></h1></center>
-<br>
-<pre><span class="keyword">module</span> NonRelational: <code class="code">sig</code> <a href="NonRelational.html">..</a> <code class="code">end</code></pre>A module type for non relational domains and a functor to build
+<h1>Module <a href="type_NonRelational.html">NonRelational</a></h1>
+
+<pre><span class="keyword">module</span> NonRelational: <code class="code">sig</code> <a href="NonRelational.html">..</a> <code class="code">end</code></pre><div class="info module top">
+A module type for non relational domains and a functor to build
     relational domains from them (by pointwise extension).<br>
+</div>
 <hr width="100%">
+
 <pre><span class="keyword">module type</span> <a href="NonRelational.Domain.html">Domain</a> = <code class="code">sig</code> <a href="NonRelational.Domain.html">..</a> <code class="code">end</code></pre><div class="info">
 Module type of non relational domains.
 </div>
+
 <pre><span class="keyword">module</span> <a href="NonRelational.MakeRelational.html">MakeRelational</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">D</code><code class="code"> : </code><code class="type"><a href="NonRelational.Domain.html">Domain</a></code><code class="code">) -&gt; </code><code class="type"><a href="Relational.Domain.html">Relational.Domain</a></code><code class="type"> </code></div></pre><div class="info">
 Functor to build relational domains from non relational ones
     (by pointwise extension).

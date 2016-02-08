@@ -37,11 +37,10 @@ let analyze domain descending input_filename output_filename =
       Report.nlogf 4 "%a⟦%s = %a⟧@,(%a)@ = %a." Location.fprint l
 	n Ast.fprint_expr e Dom.fprint t Dom.fprint t';
       t' in
-    let guard l (e, sl) t =
-      let t' = Dom.guard (e, sl) t in
-      Report.nlogf 4 "%a⟦%a %s 0⟧@,(%a)@ = %a." Location.fprint l
+    let guard l e t =
+      let t' = Dom.guard e t in
+      Report.nlogf 4 "%a⟦%a⟧@,(%a)@ = %a." Location.fprint l
 	Ast.fprint_expr e 
-	(Ast.string_of_cmp sl)
 	Dom.fprint t Dom.fprint t';
       t' in
     let join l x y =
@@ -61,23 +60,23 @@ let analyze domain descending input_filename output_filename =
       let t = assignment l n e t in
       Location.Map.add (Location.end_p l) t m, t
 
-    | Ast.Asrt (l, (e, sl)) ->
-      let t = guard e.Ast.expr_loc (e, sl) t in
+    | Ast.Asrt (l, e) ->
+      let t = guard e.Ast.expr_loc e t in
       Location.Map.add (Location.end_p l) t m, t
 
     | Ast.Seq (_, s1, s2) -> post_stm (post_stm (m, t) s1) s2
 
-    | Ast.Ite (l, (e, sl), s1, s2) ->
-      let t1 = guard e.Ast.expr_loc (e, sl) t in
+    | Ast.Ite (l, e, s1, s2) ->
+      let t1 = guard e.Ast.expr_loc e t in
       let m = Location.Map.add (Location.beg_p (Ast.loc_of_stm s1)) t1 m in
       let m, t1 = post_stm (m, t1) s1 in
-      let t2 = guard (Location.beg_p (Ast.loc_of_stm s2)) (Ast.neg_guard e sl) t in
+      let t2 = guard (Location.beg_p (Ast.loc_of_stm s2)) (Ast.neg_guard e) t in
       let m = Location.Map.add (Location.beg_p (Ast.loc_of_stm s2)) t2 m in
       let m, t2 = post_stm (m, t2) s2 in
       let t = join (Location.end_p l) t1 t2 in
       Location.Map.add (Location.end_p l) t m, t
 
-    | Ast.While (l, (e, sl), s) ->
+    | Ast.While (l, e, s) ->
 
       let rec lfp n m t t' =
         let t'' = Dom.widening t t' in
@@ -89,7 +88,7 @@ let analyze domain descending input_filename output_filename =
             Location.fprint l n Dom.fprint t'' Dom.fprint t;
           t'', (m, t'')
         end else begin
-          let t' = guard (Ast.loc_of_expr e) (e, sl) t'' in
+          let t' = guard (Ast.loc_of_expr e) e t'' in
           let m = Location.Map.add (Location.beg_p (Ast.loc_of_stm s)) t' m in
           let m, t' = post_stm (m, t') s in
           t'', snd (lfp (n + 1) m t'' t')
@@ -97,7 +96,7 @@ let analyze domain descending input_filename output_filename =
 
       let rec desc_iter n m t t' =
         if n > descending then m, t' else begin
-          let t'' = guard (Ast.loc_of_expr e) (e, sl) t' in
+          let t'' = guard (Ast.loc_of_expr e) e t' in
           let m = Location.Map.add (Location.beg_p (Ast.loc_of_stm s)) t'' m in
           let m, t'' = post_stm (m, t'') s in
           let t''' = Dom.meet t' (Dom.join t t'') in
@@ -116,8 +115,12 @@ let analyze domain descending input_filename output_filename =
         (* Then perform potential descending iterations. *)
         desc_iter 1 m t t' in
       (* Compute reachable states after the loop. *)
-      let t = guard (Location.end_p l) (Ast.neg_guard e sl) t in
-      Location.Map.add (Location.end_p l) t m, t in
+      let t = guard (Location.end_p l) (Ast.neg_guard e) t in
+      Location.Map.add (Location.end_p l) t m, t 
+
+    | Ast.Nop l -> m, t 
+
+  in
 
   (* Parse program, call [post_stm top] and output result. *)
   Report.nlogf 1 "Analyze file %s, writing results to %s."

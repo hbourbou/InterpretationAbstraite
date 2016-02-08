@@ -22,6 +22,20 @@
 open Parser
 
 exception Lexing_error of string
+
+(* [q_of_string s1 s2] parses "s1.s2" as a Q.t. Q.of_string doesn't
+   handle decimal notation with a dot, we have to do it ourselves. *)
+let q_of_string s1 s2 = match s2 with
+  | None -> Q.of_string s1
+  | Some s2 ->
+     let n1 = Q.of_string s1 in
+     let n2 = Q.of_string s2 in
+     let m =
+       Q.of_string ("1" ^ String.make (String.length s2) '0') in
+     Q.add n1 (Q.div n2 m)
+
+
+
 }
 
 let digit = ['0'-'9']
@@ -58,15 +72,15 @@ rule token = parse
   | '<' { LT }
   | ">=" { GE }
   | "<=" { LE }
-  | ('0' | (['1'-'9'] digit*)) '.' digit+ as r
-      { NUM (Q.of_string r, Ast.RealT) }
+  | (('0' | (['1'-'9'] digit*)) as n1) ('.' ((digit*) as n2))? { NUM (q_of_string n1 n2, Ast.RealT) }
+  | '.' ((digit+) as n) { NUM (q_of_string "" (Some n), Ast.RealT) }
   | ('0' | (['1'-'9'] digit*)) as n
       { (* let n = *)
         (*   try int_of_string n *)
         (*   with Failure "int_of_string" -> *)
         (*     raise (Lexing_error "constant overflow") in *)
         NUM (Q.of_string n, Ast.IntT) }
-  | (alpha (alpha|digit|['_'])*) as n { VAR n }
+  | (['_']* alpha (alpha|digit|['_'])*) as n { VAR n }
   | eof { EOF }
   | _ { raise (Lexing_error "unknown char") }
 

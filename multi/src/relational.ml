@@ -52,6 +52,8 @@ module type Domain = sig
   val top : Name.Set.t -> t
   val bottom : Name.Set.t -> t
   val is_bottom : t -> bool
+
+  val get_vars: t -> Name.Set.t
   (** Infimums of the lattice (when the relational domain focuses on given set
       of variables). *)
 
@@ -72,7 +74,7 @@ module type Domain = sig
 
   (** [guard e t] returns a [t'] such that:
       {[[|e >= 0|](\gamma(t)) \subseteq \gamma(t').]}*)
-  val guard : Ast.expr * Ast.cmp -> t -> t
+  val guard : Ast.expr -> t -> t
 end
 
 (** Product functor for relational domains. *)
@@ -87,14 +89,15 @@ struct
   let order (x1, y1) (x2, y2) = D1.order x1 x2 && D2.order y1 y2
   let top s = D1.top s, D2.top s
   let bottom s = D1.bottom s, D2.bottom s
+  let get_vars (x,y) = Name.Set.union (D1.get_vars x ) (D2.get_vars y)
   let is_bottom (x,y) = D1.is_bottom x || D2.is_bottom y
   let join (x1, y1) (x2, y2) = D1.join x1 x2, D2.join y1 y2
   let meet ((x1, y1) as e1) ((x2, y2) as e2) = 
-    (* if is_bottom e1 || is_bottom e2 then *)
-    (*   bottom  *)
-    (* else *)
+    if is_bottom e1 || is_bottom e2 then 
+      bottom  (Name.Set.union (get_vars e1) (get_vars e2))
+    else 
       D1.meet x1 x2, D2.meet y1 y2
   let widening (x1, y1) (x2, y2) = D1.widening x1 x2, D2.widening y1 y2
   let assignment v e (x,y) = D1.assignment v e x, D2.assignment v e y
-  let guard (e, cmp) (x,y) = D1.guard (e, cmp) x, D2.guard (e, cmp) y
+  let guard e (x,y) = D1.guard e x, D2.guard e y
 end

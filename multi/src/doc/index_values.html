@@ -23,7 +23,9 @@
 <link title="InfInt" rel="Chapter" href="InfInt.html"><title>Index of values</title>
 </head>
 <body>
-<center><h1>Index of values</h1></center>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Index of values</h1>
 <table>
 <tr><td align="left"><br>A</td></tr>
 <tr><td><a href="InfInt.html#VALadd_lb">add_lb</a> [<a href="InfInt.html">InfInt</a>]</td>
@@ -36,31 +38,27 @@
 <code class="code">add_ub x y</code> is an upper bound of <code class="code">x+y</code>.
 </div>
 </td></tr>
-<tr><td><a href="PrintResults.Make.html#VALalarms">alarms</a> [<a href="PrintResults.Make.html">PrintResults.Make</a>]</td>
-<td><div class="info">
-<code class="code">alarms m t</code> uses informations contained in <code class="code">m</code> (as described above)
-      to print warnings (using <code class="code">Report.warning_loc</code>) about possible
-      empty rand intervals, divisions by zero and code proven to be dead.
-</div>
-</td></tr>
 <tr><td><a href="Analyze.html#VALanalyze">analyze</a> [<a href="Analyze.html">Analyze</a>]</td>
 <td><div class="info">
-<code class="code">analyze descending input output</code> analyzes TINY program in file <code class="code">input</code>
-    and outputs result as a commented program in file <code class="code">output</code> or standard
-    output if no output is provided.
+<code class="code">analyze domain descending input output</code> analyzes RINY program in
+    file <code class="code">input</code> with abstract domain <code class="code">domain</code> and outputs result as a
+    commented program (or only invariants if <code class="code">Report.verbosity</code> &lt;= 1)
+    in file <code class="code">output</code> or standard output if no output is provided.
 </div>
 </td></tr>
+<tr><td><a href="Relational.Prod.html#VALassignment">assignment</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
 <tr><td><a href="Relational.Domain.html#VALassignment">assignment</a> [<a href="Relational.Domain.html">Relational.Domain</a>]</td>
 <td><div class="info">
 <code class="code">assignment n e t</code> returns a <code class="code">t'</code> such that:
-      <pre><code class="code">[|n = e;|](\gamma(t)) \subseteq \gamma(t').</code></pre>
+      <pre class="codepre"><code class="code">[|n = e;|](\gamma(t)) \subseteq \gamma(t').</code></pre>
 </div>
 </td></tr>
 <tr><td align="left"><br>B</td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALbacksem_div">backsem_div</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
 <td><div class="info">
 <code class="code">backsem_plus t1 t2 t</code> returns a pair <code class="code">(t1', t2')</code> such that:
-      <pre><code class="code">\forall n1 n2 : Z,
+      <pre class="codepre"><code class="code">\forall n1 n2 : Z or R,
       (n1 \in \gamma(t1) /\ n2 \in \gamma(t2) /\ n1+n2 \in \gamma(t))
       -&gt; (n1 \in \gamma(t1') /\ n2 \in \gamma(t2')).</code></pre>
 </div>
@@ -71,25 +69,30 @@
 <td></td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALbacksem_times">backsem_times</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
 <td></td></tr>
+<tr><td><a href="NonRelational.Domain.html#VALbase_type">base_type</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
+<td><div class="info">
+Type of represented values (ie.
+</div>
+</td></tr>
 <tr><td><a href="Location.html#VALbeg_p">beg_p</a> [<a href="Location.html">Location</a>]</td>
 <td><div class="info">
 <code class="code">beg_p l</code> returns a location representing the point at beginning of <code class="code">l</code>.
 </div>
 </td></tr>
+<tr><td><a href="Relational.Prod.html#VALbottom">bottom</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALbottom">bottom</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
-<td><div class="info">
-Infimums of the lattice.
-</div>
-</td></tr>
+<td></td></tr>
 <tr><td><a href="Relational.Domain.html#VALbottom">bottom</a> [<a href="Relational.Domain.html">Relational.Domain</a>]</td>
-<td><div class="info">
-Infimums of the lattice (when the relational domain focuses on given set
-      of variables).
-</div>
-</td></tr>
+<td></td></tr>
 <tr><td align="left"><br>C</td></tr>
 <tr><td><a href="Ast.html#VALchar_of_bop">char_of_bop</a> [<a href="Ast.html">Ast</a>]</td>
 <td></td></tr>
+<tr><td><a href="Ast.html#VALcmp_expr">cmp_expr</a> [<a href="Ast.html">Ast</a>]</td>
+<td><div class="info">
+Total ordering function over expressions (ignoring locations).
+</div>
+</td></tr>
 <tr><td><a href="Compile.html#VALcompile">compile</a> [<a href="Compile.html">Compile</a>]</td>
 <td><div class="info">
 <code class="code">compile input output</code> compiles TINY file <code class="code">input</code> to C file <code class="code">output</code>
@@ -123,6 +126,11 @@ Dummy location.
 Equality on type <code class="code">t</code>.
 </div>
 </td></tr>
+<tr><td><a href="Report.html#VALerror">error</a> [<a href="Report.html">Report</a>]</td>
+<td><div class="info">
+Prints an error message.
+</div>
+</td></tr>
 <tr><td><a href="Report.html#VALerror_loc">error_loc</a> [<a href="Report.html">Report</a>]</td>
 <td><div class="info">
 Prints an error message along with location and raises <code class="code">Error</code>.
@@ -143,6 +151,8 @@ The filename which will be registered in all subsequent calls to
 </td></tr>
 <tr><td><a href="InfInt.html#VALfin">fin</a> [<a href="InfInt.html">InfInt</a>]</td>
 <td></td></tr>
+<tr><td><a href="Relational.Prod.html#VALfprint">fprint</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALfprint">fprint</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
 <td><div class="info">
 Prints an abstract value.
@@ -160,6 +170,22 @@ Outputs a location.
 </td></tr>
 <tr><td><a href="Ast.html#VALfprint_expr">fprint_expr</a> [<a href="Ast.html">Ast</a>]</td>
 <td></td></tr>
+<tr><td><a href="Ast.html#VALfprint_guard">fprint_guard</a> [<a href="Ast.html">Ast</a>]</td>
+<td></td></tr>
+<tr><td><a href="Relational.Prod.html#VALfprint_help">fprint_help</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
+<tr><td><a href="NonRelational.Domain.html#VALfprint_help">fprint_help</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
+<td><div class="info">
+Outputs some help about the options recognized by
+      <code class="code">parse_param</code>.
+</div>
+</td></tr>
+<tr><td><a href="Relational.Domain.html#VALfprint_help">fprint_help</a> [<a href="Relational.Domain.html">Relational.Domain</a>]</td>
+<td><div class="info">
+Outputs some help about the options recognized by
+      <code class="code">parse_param</code>.
+</div>
+</td></tr>
 <tr><td><a href="Ast.html#VALfprint_stm">fprint_stm</a> [<a href="Ast.html">Ast</a>]</td>
 <td></td></tr>
 <tr><td align="left"><br>G</td></tr>
@@ -174,13 +200,28 @@ Outputs a location.
     of lexer in file <code class="code">filename</code>.
 </div>
 </td></tr>
+<tr><td><a href="Relational.Prod.html#VALguard">guard</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
 <tr><td><a href="Relational.Domain.html#VALguard">guard</a> [<a href="Relational.Domain.html">Relational.Domain</a>]</td>
 <td><div class="info">
 <code class="code">guard e t</code> returns a <code class="code">t'</code> such that:
-      <pre><code class="code">[|e &gt; 0|](\gamma(t)) \subseteq \gamma(t').</code></pre>
+      <pre class="codepre"><code class="code">[|e &gt;= 0|](\gamma(t)) \subseteq \gamma(t').</code></pre>
+</div>
+</td></tr>
+<tr><td align="left"><br>I</td></tr>
+<tr><td><a href="Relational.Prod.html#VALis_bottom">is_bottom</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
+<tr><td><a href="NonRelational.Domain.html#VALis_bottom">is_bottom</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
+<td></td></tr>
+<tr><td><a href="Relational.Domain.html#VALis_bottom">is_bottom</a> [<a href="Relational.Domain.html">Relational.Domain</a>]</td>
+<td><div class="info">
+Infimums of the lattice (when the relational domain focuses on given set
+      of variables).
 </div>
 </td></tr>
 <tr><td align="left"><br>J</td></tr>
+<tr><td><a href="Relational.Prod.html#VALjoin">join</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALjoin">join</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
 <td></td></tr>
 <tr><td><a href="Relational.Domain.html#VALjoin">join</a> [<a href="Relational.Domain.html">Relational.Domain</a>]</td>
@@ -196,6 +237,11 @@ Returns the number of '\n' appearing in a string.
 <code class="code">loc_of_expr e</code> returns location contained in expression <code class="code">e</code>.
 </div>
 </td></tr>
+<tr><td><a href="Ast.html#VALloc_of_guard">loc_of_guard</a> [<a href="Ast.html">Ast</a>]</td>
+<td><div class="info">
+<code class="code">loc_of_guard g</code> returns location contained in guard <code class="code">g</code>.
+</div>
+</td></tr>
 <tr><td><a href="Ast.html#VALloc_of_stm">loc_of_stm</a> [<a href="Ast.html">Ast</a>]</td>
 <td><div class="info">
 <code class="code">loc_of_stm s</code> returns location contained in statement <code class="code">s</code>.
@@ -203,6 +249,8 @@ Returns the number of '\n' appearing in a string.
 </td></tr>
 <tr><td align="left"><br>M</td></tr>
 <tr><td><a href="InfInt.html#VALmax">max</a> [<a href="InfInt.html">InfInt</a>]</td>
+<td></td></tr>
+<tr><td><a href="Relational.Prod.html#VALmeet">meet</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
 <td></td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALmeet">meet</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
 <td><div class="info">
@@ -221,6 +269,13 @@ Least upper bound and greatest lower bound of the lattice.
 -oo
 </div>
 </td></tr>
+<tr><td><a href="Ast.html#VALmk_cst_expr">mk_cst_expr</a> [<a href="Ast.html">Ast</a>]</td>
+<td><div class="info">
+Printing Functions
+</div>
+</td></tr>
+<tr><td><a href="Ast.html#VALmk_expr">mk_expr</a> [<a href="Ast.html">Ast</a>]</td>
+<td></td></tr>
 <tr><td><a href="InfInt.html#VALmul_lb">mul_lb</a> [<a href="InfInt.html">InfInt</a>]</td>
 <td><div class="info">
 <code class="code">mul_lb x y</code> is a lower bound of <code class="code">x*y</code>.
@@ -232,15 +287,27 @@ Least upper bound and greatest lower bound of the lattice.
 </div>
 </td></tr>
 <tr><td align="left"><br>N</td></tr>
+<tr><td><a href="Relational.Prod.html#VALname">name</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
+<tr><td><a href="NonRelational.Domain.html#VALname">name</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
+<td><div class="info">
+Name of the domain.
+</div>
+</td></tr>
+<tr><td><a href="Relational.Domain.html#VALname">name</a> [<a href="Relational.Domain.html">Relational.Domain</a>]</td>
+<td><div class="info">
+Name of the domain.
+</div>
+</td></tr>
 <tr><td><a href="Ast.html#VALneg_guard">neg_guard</a> [<a href="Ast.html">Ast</a>]</td>
 <td><div class="info">
-<code class="code">neg_guard e</code> returns an expression <code class="code">e'</code> such that guard e' &gt; 0
-    is equivalent to e &lt;= 0.
+<code class="code">neg_guard e sl</code> returns an expression <code class="code">e'</code> such that guard e' &gt;= 0 is
+    equivalent to e &gt; 0 is sl = Strict (resp &gt;= if Loose).
 </div>
 </td></tr>
 <tr><td><a href="Report.html#VALnlogf">nlogf</a> [<a href="Report.html">Report</a>]</td>
 <td><div class="info">
-<code class="code">nflogf n ff f &lt;args&gt;</code> prints a log message like <code class="code">Format.fprintf</code>
+<code class="code">nflogf n f &lt;args&gt;</code> prints a log message like <code class="code">Format.eprintf</code>
     if <code class="code">n</code> is greater or equal to <code class="code">verbosity</code>.
 </div>
 </td></tr>
@@ -252,6 +319,8 @@ Least upper bound and greatest lower bound of the lattice.
 Order (less or equal) on type <code class="code">t</code> (-oo is less than everything,..).
 </div>
 </td></tr>
+<tr><td><a href="Relational.Prod.html#VALorder">order</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALorder">order</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
 <td><div class="info">
 Order on type <code class="code">t</code>.
@@ -268,11 +337,25 @@ Returns string in option or "stdout" if None given.
 </div>
 </td></tr>
 <tr><td align="left"><br>P</td></tr>
+<tr><td><a href="Relational.Prod.html#VALparse_param">parse_param</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
+<tr><td><a href="NonRelational.Domain.html#VALparse_param">parse_param</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
+<td><div class="info">
+<code class="code">parse_param s</code> parses parameters in <code class="code">s</code>.
+</div>
+</td></tr>
+<tr><td><a href="Relational.Domain.html#VALparse_param">parse_param</a> [<a href="Relational.Domain.html">Relational.Domain</a>]</td>
+<td><div class="info">
+<code class="code">parse_param s</code> parses parameters in <code class="code">s</code>.
+</div>
+</td></tr>
 <tr><td><a href="InfInt.html#VALpinfty">pinfty</a> [<a href="InfInt.html">InfInt</a>]</td>
 <td><div class="info">
 +oo
 </div>
 </td></tr>
+<tr><td><a href="Ast.html#VALpp_base_type">pp_base_type</a> [<a href="Ast.html">Ast</a>]</td>
+<td></td></tr>
 <tr><td><a href="PrintResults.Make.html#VALprint">print</a> [<a href="PrintResults.Make.html">PrintResults.Make</a>]</td>
 <td><div class="info">
 <code class="code">print m t output_filename</code> prints the statement <code class="code">t</code>, with results
@@ -280,23 +363,41 @@ Returns string in option or "stdout" if None given.
       <code class="code">output_filename</code> (or stdout if <code class="code">output_filename</code> is <code class="code">None</code>).
 </div>
 </td></tr>
+<tr><td><a href="PrintResults.Make.html#VALprint_invariants">print_invariants</a> [<a href="PrintResults.Make.html">PrintResults.Make</a>]</td>
+<td><div class="info">
+Same as <code class="code">print</code> but only print loop invariants (in the same
+      order that the <code class="code">while</code> keywords appear in the code).
+</div>
+</td></tr>
+<tr><td><a href="Utils.html#VALprofile">profile</a> [<a href="Utils.html">Utils</a>]</td>
+<td><div class="info">
+<code class="code">profile f</code> executes the function <code class="code">f</code> and returns both its result
+    and the execution time in second.
+</div>
+</td></tr>
 <tr><td align="left"><br>S</td></tr>
+<tr><td><a href="Utils.html#VALselect_param">select_param</a> [<a href="Utils.html">Utils</a>]</td>
+<td><div class="info">
+<code class="code">select_param n p</code> cuts the string <code class="code">p</code> into <code class="code">n'</code> and <code class="code">p'</code> such
+    that <code class="code">p</code> = <code class="code">n':p'</code> and n' doesn't contain the character ':'.
+</div>
+</td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALsem_div">sem_div</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
 <td><div class="info">
 <code class="code">sem_plus t1 t2</code> returns a <code class="code">t'</code> such that:
-      <pre><code class="code">{ n1 + n2 | n1 \in \gamma(t1), n2 \in \gamma(t2) } \subseteq \gamma(t').</code></pre>
+      <pre class="codepre"><code class="code">{ n1 + n2 | n1 \in \gamma(t1), n2 \in \gamma(t2) } \subseteq \gamma(t').</code></pre>
 </div>
 </td></tr>
-<tr><td><a href="NonRelational.Domain.html#VALsem_guard">sem_guard</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
+<tr><td><a href="NonRelational.Domain.html#VALsem_geq0">sem_geq0</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
 <td><div class="info">
-<code class="code">sem_guard t</code> returns a <code class="code">t'</code> such that:
-      <pre><code class="code">{ n \in \gamma(t) | n &gt; 0 } \subseteq \gamma(t').</code></pre>
+<code class="code">sem_geq0 t</code> returns a <code class="code">t'</code> such that:
+      <pre class="codepre"><code class="code">{ n \in \gamma(t) | n &gt;= 0 } \subseteq \gamma(t').</code></pre>
 </div>
 </td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALsem_itv">sem_itv</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
 <td><div class="info">
 <code class="code">sem_itv n1 n2</code> returns an abstraction <code class="code">t</code> of the interval [n1, n2]:
-      <pre><code class="code">[n1, n2] \subseteq \gamma(t).</code></pre>
+      <pre class="codepre"><code class="code">[n1, n2] \subseteq \gamma(t).</code></pre>
 </div>
 </td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALsem_minus">sem_minus</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
@@ -310,6 +411,8 @@ Returns string in option or "stdout" if None given.
 <code class="code">silent f</code> executes function <code class="code">f</code> without printing any log message.
 </div>
 </td></tr>
+<tr><td><a href="Ast.html#VALstring_of_cmp">string_of_cmp</a> [<a href="Ast.html">Ast</a>]</td>
+<td></td></tr>
 <tr><td><a href="InfInt.html#VALsub_lb">sub_lb</a> [<a href="InfInt.html">InfInt</a>]</td>
 <td><div class="info">
 <code class="code">sub_lb x y</code> is a lower bound of <code class="code">x-y</code>.
@@ -325,15 +428,23 @@ Returns string in option or "stdout" if None given.
 <td></td></tr>
 <tr><td><a href="InfInt.html#VALto_string">to_string</a> [<a href="InfInt.html">InfInt</a>]</td>
 <td></td></tr>
+<tr><td><a href="Relational.Prod.html#VALtop">top</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALtop">top</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
 <td></td></tr>
 <tr><td><a href="Relational.Domain.html#VALtop">top</a> [<a href="Relational.Domain.html">Relational.Domain</a>]</td>
 <td></td></tr>
 <tr><td align="left"><br>V</td></tr>
+<tr><td><a href="Ast.html#VALvars_of_expr">vars_of_expr</a> [<a href="Ast.html">Ast</a>]</td>
+<td><div class="info">
+<code class="code">vars_of_expr e</code> returns the set of variables appearing
+    in expression <code class="code">e</code>.
+</div>
+</td></tr>
 <tr><td><a href="Ast.html#VALvars_of_stm">vars_of_stm</a> [<a href="Ast.html">Ast</a>]</td>
 <td><div class="info">
-<code class="code">vars_of_stm stm</code> returns the set of variables appearing
-    in statement <code class="code">stm</code>.
+<code class="code">vars_of_stm s</code> returns the set of variables appearing
+    in statement <code class="code">s</code>.
 </div>
 </td></tr>
 <tr><td><a href="Report.html#VALverbosity">verbosity</a> [<a href="Report.html">Report</a>]</td>
@@ -342,11 +453,25 @@ Verbosity level.
 </div>
 </td></tr>
 <tr><td align="left"><br>W</td></tr>
+<tr><td><a href="Utils.html#VALwarn_unknown_param">warn_unknown_param</a> [<a href="Utils.html">Utils</a>]</td>
+<td><div class="info">
+<code class="code">warn_unknown_param n p</code> does nothin if <code class="code">p</code> is the empty string
+    and outputs a warning otherwise (using <code class="code">Report.warning</code>), saying
+    that parameter <code class="code">p</code> is unrecognized by domain <code class="code">n</code>.
+</div>
+</td></tr>
+<tr><td><a href="Report.html#VALwarning">warning</a> [<a href="Report.html">Report</a>]</td>
+<td><div class="info">
+Prints a warning message.
+</div>
+</td></tr>
 <tr><td><a href="Report.html#VALwarning_loc">warning_loc</a> [<a href="Report.html">Report</a>]</td>
 <td><div class="info">
 Prints a warning message along with location.
 </div>
 </td></tr>
+<tr><td><a href="Relational.Prod.html#VALwidening">widening</a> [<a href="Relational.Prod.html">Relational.Prod</a>]</td>
+<td></td></tr>
 <tr><td><a href="NonRelational.Domain.html#VALwidening">widening</a> [<a href="NonRelational.Domain.html">NonRelational.Domain</a>]</td>
 <td><div class="info">
 Widening to ensure termination of the analyses.
@@ -371,6 +496,6 @@ Open an output channel on given filename, gives it to the given function and
 <tr><td align="left"><br>Z</td></tr>
 <tr><td><a href="InfInt.html#VALzero">zero</a> [<a href="InfInt.html">InfInt</a>]</td>
 <td></td></tr>
-</table><br>
+</table>
 </body>
 </html>

@@ -36,17 +36,18 @@ type uexpr =
   | UVar of Location.t * Name.t  (** v *)
   | UBinop of Location.t * bop * uexpr * uexpr    (** expr + expr,... *)
   | URand of Location.t * base_type * Q.t * Q.t    (** rand(n, n) *)
+  | UCall of Location.t * Name.t * uexpr list
+  | UCond of Location.t * uexpr * cmp 
 
 
-type uguard = uexpr * cmp 
 
 type ustm = 
   | UAsn of Location.t * Name.t * uexpr
-  | UAsrt of Location.t * uguard
+  | UAsrt of Location.t * uexpr
   | USeq of Location.t * ustm * ustm
-  | UIte of Location.t * uguard * ustm * ustm
-  | UWhile of Location.t * uguard * ustm
-
+  | UIte of Location.t * uexpr * ustm * ustm
+  | UWhile of Location.t * uexpr * ustm
+  | UNop of Location.t
 (* Typed Ast *) 
 				
 type expr_desc =
@@ -54,6 +55,10 @@ type expr_desc =
   | Var of Name.t  (** v *)
   | Binop of bop * expr * expr    (** expr + expr,... *)
   | Rand of Q.t * Q.t    (** rand(n, n) *)
+  | Call of Name.t * expr list
+  | Cond of expr * cmp
+
+
  and expr =
    { expr_desc: expr_desc;
      expr_loc: Location.t;
@@ -61,15 +66,13 @@ type expr_desc =
    }
 
 
-type guard = expr * cmp 
-
 type stm = 
   | Asn of Location.t * Name.t * expr
-  | Asrt of Location.t * guard
+  | Asrt of Location.t * expr
   | Seq of Location.t * stm * stm
-  | Ite of Location.t * guard * stm * stm
-  | While of Location.t * guard * stm
-
+  | Ite of Location.t * expr * stm * stm
+  | While of Location.t * expr * stm
+  | Nop of Location.t
 
 let rec cmp_expr e1 e2 = match e1.expr_desc, e2.expr_desc with
   | Cst n1, Cst n2 -> Q.compare n1 n2
@@ -84,12 +87,19 @@ let rec cmp_expr e1 e2 = match e1.expr_desc, e2.expr_desc with
      else
        let r = cmp_expr e11 e21 in
        if r <> 0 then r else cmp_expr e12 e22
-  | Binop _, Rand _ -> -1
+  | Binop _, _ -> -1
   | Rand _, (Cst _ | Var _ | Binop _) -> 1
   | Rand (n11, n12), Rand (n21, n22) ->
      let r = Q.compare n11 n21 in
      if r <> 0 then r
      else Q.compare n12 n22
+  | Rand _, _ -> -1
+  | Cond _, (Rand _ | Cst _ | Var _ | Binop _) -> 1
+  | Cond (e1, cmp1) , Cond (e2, cmp2) -> cmp_expr e1 e2
+  | Cond _, _ -> -1
+  | Call _, (Rand _ | Cst _ | Var _ | Binop _ | Cond _) -> 1
+  | Call (f1, args1), Call (f2, args2) -> compare args1 args2
+  
 
 module OrderedExpr = struct
   type t = expr
@@ -100,28 +110,35 @@ module ExprMap = Map.Make (OrderedExpr)
 
 let loc_of_expr e = e.expr_loc
 
-let loc_of_guard (e, _) = e.expr_loc
+(* let loc_of_guard (e, _) = e.expr_loc *)
 
 let loc_of_stm = function
   | Asn (l, _, _) | Asrt (l, _) | Seq (l, _, _)
-  | Ite (l, _, _, _) | While (l, _, _) -> l
+  | Ite (l, _, _, _) | While (l, _, _)  | Nop l -> l
 
 let rec vars_of_expr s e = match e.expr_desc with
   | Cst _ -> s
   | Var n -> Name.Set.add n s
   | Binop ( _, e1, e2) -> vars_of_expr (vars_of_expr s e1) e2
   | Rand _ -> s
+  | Call (_, el) -> List.fold_left vars_of_expr s el
+  | Cond (e, _) -> vars_of_expr s e
 
 let mk_expr l t d = { expr_type = t; expr_loc = l; expr_desc = d }
+let mk_cond l d sl = { expr_type = BoolT; expr_loc = l; expr_desc = Cond (d, sl) }
 let mk_cst_expr l t v = mk_expr l t (Cst v)
-let neg_guard e sl = 
-  let minus_e = 
-    mk_expr 
-      e.expr_loc
-      e.expr_type 
-      (Binop (Minus, mk_cst_expr e.expr_loc e.expr_type Q.zero, e))
-  in
-  minus_e, (match sl with Loose -> Strict | Strict -> Loose)
+
+let neg_guard e = 
+  match e.expr_desc with
+  | Cond (e, sl) -> 
+    let minus_e = 
+      mk_expr 
+	e.expr_loc
+	e.expr_type 
+	(Binop (Minus, mk_cst_expr e.expr_loc e.expr_type Q.zero, e))
+    in
+    mk_expr e.expr_loc BoolT (Cond (minus_e, (match sl with Loose -> Strict | Strict -> Loose)))
+  | _ -> assert false
 
 
 (*
@@ -136,15 +153,16 @@ let neg_guard e sl =
 *)
 
 let vars_of_stm stm =
-  let vars_of_guards s (e, _) = vars_of_expr s e in 
+  (* let vars_of_guards s (e, _) = vars_of_expr s e in  *)
   let rec vars_of_stm s = function
     | Asn (_, n, e) -> vars_of_expr (Name.Set.add n s) e
-    | Asrt (_, g) -> vars_of_guards s g
+    | Asrt (_, g) -> vars_of_expr s g
     | Seq (_, s1, s2) -> vars_of_stm (vars_of_stm s s1) s2
     | Ite (_, g, s1, s2) ->
-      vars_of_stm (vars_of_stm (vars_of_guards s g) s1) s2
+      vars_of_stm (vars_of_stm (vars_of_expr s g) s1) s2
     | While (_, g, st) ->
-       vars_of_stm (vars_of_guards s g) st
+       vars_of_stm (vars_of_expr s g) st
+    | Nop _ -> Name.Set.empty
   in
   vars_of_stm Name.Set.empty stm
 
@@ -176,22 +194,26 @@ let fprint_expr ff e =
         (char_of_bop bop)
         (fprint_expr_prior (prior_bop bop + 1)) e2
     | Rand (c1, c2) ->
-      Format.fprintf ff "rand(@[%a,@ %a@])" Q.pp_print c1 Q.pp_print c2 in
+      Format.fprintf ff "rand(@[%a,@ %a@])" Q.pp_print c1 Q.pp_print c2 
+    | Call(n, el) ->
+      Format.fprintf ff "@[<h>%s(%a)@]"
+	n
+	(Utils.fprintf_list ~sep:", " (fprint_expr_prior 0)) el
+    | Cond(e, cmp) ->
+      Format.fprintf ff "@[%a@ %s 0@]"
+	(fprint_expr_prior 0) e (string_of_cmp cmp)
+  in
   fprint_expr_prior 0 ff e
-
-let fprint_guard ff (e, cmp) =
-  Format.fprintf ff "@[%a@ %s 0@]"
-                 fprint_expr e (string_of_cmp cmp)
-
+  
 let rec fprint_stm ff = function
   | Asn (_, n, e) -> Format.fprintf ff "%s = @[%a@];" n fprint_expr e
-  | Asrt (_, g) -> Format.fprintf ff "assert(%a);" fprint_guard g
+  | Asrt (_, g) -> Format.fprintf ff "assert(%a);" fprint_expr g
   | Seq (_, s1, s2) ->
      Format.fprintf ff "@[<v>%a@ %a@]" fprint_stm s1 fprint_stm s2
   | Ite (_, g, s1, s2) ->
      Format.fprintf ff "@[<v>@[<v 2>if (%a) {@ %a@]@ @[<v 2>} else {@ %a@]@ }@]"
-                    fprint_guard g fprint_stm s1 fprint_stm s2
+                    fprint_expr g fprint_stm s1 fprint_stm s2
   | While (_, g, s) ->
      Format.fprintf ff "@[<v>@[<v 2>while (%a) {@ %a@]@ }@]"
-                    fprint_guard g fprint_stm s
-
+                    fprint_expr g fprint_stm s
+  | Nop _ -> ()

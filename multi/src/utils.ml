@@ -79,3 +79,9 @@ let select_param name param =
 let warn_unknown_param name p =
   if p <> "" then
     Report.warning "domain '%s': unrecognized parameter '%s' ignored." name p
+
+let rec fprintf_list ~sep:sep f fmt = function
+  | []   -> ()
+  | [e]  -> f fmt e
+  | x::r -> Format.fprintf fmt "%a%(%)%a" f x sep (fprintf_list ~sep f) r
+

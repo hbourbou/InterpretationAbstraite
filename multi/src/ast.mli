@@ -38,17 +38,16 @@ type uexpr =
   | UVar of Location.t  * Name.t  (** v *)
   | UBinop of Location.t * bop * uexpr * uexpr    (** expr + expr,... *)
   | URand of Location.t * base_type * Q.t * Q.t    (** rand(n, n) *)
-
-
-type uguard = uexpr * cmp 
+  | UCall of Location.t * Name.t * uexpr list
+  | UCond of Location.t * uexpr * cmp 
 
 type ustm = 
   | UAsn of Location.t * Name.t * uexpr
-  | UAsrt of Location.t * uguard
+  | UAsrt of Location.t * uexpr
   | USeq of Location.t * ustm * ustm
-  | UIte of Location.t * uguard * ustm * ustm
-  | UWhile of Location.t * uguard * ustm
-
+  | UIte of Location.t * uexpr * ustm * ustm
+  | UWhile of Location.t * uexpr * ustm
+  | UNop of Location.t
 
 (* Typed Ast *) 
 
@@ -57,21 +56,24 @@ type expr_desc =
   | Var of Name.t  (** v *)
   | Binop of bop * expr * expr    (** expr + expr,... *)
   | Rand of Q.t * Q.t    (** rand(n, n) *)
+  | Call of Name.t * expr list
+  | Cond of expr * cmp 
+
  and expr =
    { expr_desc: expr_desc;
      expr_loc: Location.t;
      expr_type: base_type
    }
 
-type guard = expr * cmp  (** expr >= 0 (or >) *)
+(*type guard = expr * cmp  (** expr >= 0 (or >) *)*)
 
 type stm = 
   | Asn of Location.t * Name.t * expr  (** v = expr; *)
-  | Asrt of Location.t * guard  (** assert(guard); *)
+  | Asrt of Location.t * expr (* guard *)  (** assert(guard); *)
   | Seq of Location.t * stm * stm  (** stm stm *)
-  | Ite of Location.t * guard * stm * stm   (** if (guard) \{ stm \} else \{ stm \} *)
-  | While of Location.t * guard * stm  (** while (guard) \{ stm \} *)
-
+  | Ite of Location.t * expr(* guard *) * stm * stm   (** if (guard) \{ stm \} else \{ stm \} *)
+  | While of Location.t * expr (* guard *) * stm  (** while (guard) \{ stm \} *)
+  | Nop of Location.t
 (** {3 Maps of expressions} *)
 
 (** Total ordering function over expressions (ignoring locations). *)
@@ -84,8 +86,8 @@ module ExprMap : Map.S with type key = expr  (** Maps from exprs. *)
 (** [loc_of_expr e] returns location contained in expression [e]. *)
 val loc_of_expr : expr -> Location.t
 
-(** [loc_of_guard g] returns location contained in guard [g]. *)
-val loc_of_guard : guard -> Location.t
+(* (\** [loc_of_guard g] returns location contained in guard [g]. *\) *)
+(* val loc_of_guard : guard -> Location.t *)
 
 (** [loc_of_stm s] returns location contained in statement [s]. *)
 val loc_of_stm : stm -> Location.t
@@ -98,13 +100,14 @@ val vars_of_expr : expr -> Name.Set.t
 (** [neg_guard e sl] returns an expression [e'] such that guard e' >= 0 is
     equivalent to e > 0 is sl = Strict (resp >= if Loose). It depends on e
     type. *)
-val neg_guard : expr -> cmp -> expr * cmp
+val neg_guard : expr -> expr
 
 (** [vars_of_stm s] returns the set of variables appearing
     in statement [s]. *)
 val vars_of_stm : stm -> Name.Set.t
 
 val mk_expr : Location.t -> base_type -> expr_desc -> expr
+val mk_cond : Location.t -> expr -> cmp  -> expr
 val mk_cst_expr : Location.t -> base_type -> Q.t -> expr
 (** {2 Printing Functions} *)
 
@@ -114,7 +117,7 @@ val string_of_cmp : cmp -> string
 
 val fprint_expr : Format.formatter -> expr -> unit
 
-val fprint_guard : Format.formatter -> guard -> unit
+(* val fprint_guard : Format.formatter -> guard -> unit *)
 
 val fprint_stm : Format.formatter -> stm -> unit
 

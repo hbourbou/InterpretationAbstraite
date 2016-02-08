@@ -27,22 +27,27 @@
 <link title="InfInt" rel="Chapter" href="InfInt.html"><title>Name</title>
 </head>
 <body>
-<div class="navbar"><a href="Location.html">Previous</a>
-&nbsp;<a href="index.html">Up</a>
-&nbsp;<a href="NonRelational.html">Next</a>
+<div class="navbar"><a class="pre" href="Location.html" title="Location">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="NonRelational.html" title="NonRelational">Next</a>
 </div>
-<center><h1>Module <a href="type_Name.html">Name</a></h1></center>
-<br>
-<pre><span class="keyword">module</span> Name: <code class="code">sig</code> <a href="Name.html">..</a> <code class="code">end</code></pre>Type for variable names.<br>
+<h1>Module <a href="type_Name.html">Name</a></h1>
+
+<pre><span class="keyword">module</span> Name: <code class="code">sig</code> <a href="Name.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Type for variable names.<br>
+</div>
 <hr width="100%">
+
 <pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = <code class="type">string</code> </pre>
-<div class="info">
+<div class="info ">
 A variable name is just a string.<br>
 </div>
+
 
 <pre><span class="keyword">module</span> <a href="Name.Set.html">Set</a>: <code class="type">Set.S</code><code class="type">  with type elt = t</code></pre><div class="info">
 Sets of names.
 </div>
+
 <pre><span class="keyword">module</span> <a href="Name.Map.html">Map</a>: <code class="type">Map.S</code><code class="type">  with type key = t</code></pre><div class="info">
 Maps from names.
 </div>
